@@ -29,16 +29,13 @@ export default function App() {
     try {
       const cachedData = getMovieFromCache(query);
       if (cachedData) {
-        console.log("Date încărcate din CACHE");
         setIsCachedVersion(true);
         processAndSetData(cachedData);
         setLoading(false);
         return;
       }
 
-      console.log("Date încărcate de la API");
       const data = await fetchMovieData(query);
-
       saveMovieToCache(query, data);
       processAndSetData(data);
     } catch (err) {
@@ -55,8 +52,8 @@ export default function App() {
   };
 
   return (
-    // Am schimbat fundalul în slate-950 (foarte închis) și textul general pe alb/gri
-    <main className="min-h-screen bg-slate-950 py-16 px-4 sm:px-6 lg:px-8 font-sans selection:bg-cyan-500 selection:text-white">
+    // Fundal întunecat forțat: min-h-screen, bg-slate-950, w-full
+    <main className="min-h-screen w-full bg-slate-950 text-slate-200 py-16 px-4 sm:px-6 lg:px-8 font-sans selection:bg-cyan-500 selection:text-white">
       <div className="max-w-4xl mx-auto text-center mb-14">
         <h1 className="text-6xl font-black text-white mb-4 tracking-tight drop-shadow-2xl">
           Cine<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Verdict</span>
@@ -86,7 +83,6 @@ export default function App() {
 
       {!loading && movieData && (
         <div className="mt-12 transition-all duration-700 ease-out opacity-100 translate-y-0 max-w-4xl mx-auto">
-          
           {isCachedVersion && (
             <div className="mb-6 flex justify-end animate-fade-in">
               <span className="inline-flex items-center px-4 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-slate-800 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)] border border-cyan-500/30">
