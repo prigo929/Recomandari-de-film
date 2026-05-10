@@ -1,16 +1,26 @@
-# React + Vite
+# Proiect 13: Recomandări de film (Web Development)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicație web modernă de tip Single Page Application (SPA), care utilizează OMDb API pentru a furniza date despre filme și o logică de decizie bazată pe scorurile de la Rotten Tomatoes.
 
-Currently, two official plugins are available:
+## Membrii Echipei și Contribuții
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+*   **Alin P.** (Membrul 1)
+    *   Setup arhitectură React (Vite).
+    *   Integrare API (`fetch` către OMDb) și data handling.
+    *   Implementare mecanism de Caching cu expirare (LocalStorage).
+    *   Scriere logică decizională (Programare Funcțională) și teste unitare (Vitest).
+*   **Cosmin P.** (Membrul 2)
+    *   Proiectare și implementare interfață grafică (UI/UX) cu Tailwind CSS.
+    *   Validare W3C pentru structura HTML5 și CSS3.
+    *   Realizare diagrame UML (Use Case, Activity).
+    *   Înregistrare video și deployment platformă (Vercel/Render).
 
-## React Compiler
+## Rulare Proiect
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. `npm install`
+2. Adăugați fișierul `.env` cu variabila `VITE_OMDB_API_KEY=cheia_voastra`.
+3. `npm run dev`
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Rulare Teste (Vitest)
+Aplicația conține teste unitare pentru a valida funcțiile de calcul a scorului:
+`npm run test`
