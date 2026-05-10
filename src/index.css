@@ -1,3 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Import Tailwind folosind noul standard v4 */
+@import "tailwindcss";
+
+/* Forțăm resetarea culorilor pe body ca să lăsăm React-ul să decidă tema Dark/Light */
+body {
+  background-color: transparent;
+  color: inherit;
+}

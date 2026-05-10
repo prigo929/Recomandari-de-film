@@ -1,17 +1,22 @@
 // Autor: Membrul 2 (UI/UX)
-export default function RecommendationBanner({ type, message }) {
-  // Culori adaptate pentru Dark Mode (neon text cu fundal semi-transparent)
+export default function RecommendationBanner({ type, message, isDarkMode }) {
   const styles = {
-    good: "bg-emerald-900/30 border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)]",
-    bad: "bg-rose-900/30 border-rose-500 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.1)]",
-    neutral: "bg-amber-900/30 border-amber-500 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.1)]",
+    good: isDarkMode 
+      ? "bg-emerald-900/40 border-emerald-500 text-emerald-400" 
+      : "bg-emerald-100 border-emerald-500 text-emerald-800",
+    bad: isDarkMode 
+      ? "bg-rose-900/40 border-rose-500 text-rose-400" 
+      : "bg-rose-100 border-rose-500 text-rose-800",
+    neutral: isDarkMode 
+      ? "bg-amber-900/40 border-amber-500 text-amber-400" 
+      : "bg-amber-100 border-amber-500 text-amber-800",
   };
 
   const currentStyle = styles[type] || styles.neutral;
 
   return (
-    <aside className={`mt-6 p-5 border-l-4 rounded-r-xl backdrop-blur-md transition-all ${currentStyle}`}>
-      <p className="font-extrabold text-lg tracking-wide">{message}</p>
+    <aside className={`mt-2 p-6 border-l-[8px] rounded-2xl shadow-lg transition-colors ${currentStyle}`}>
+      <p className="font-black text-xl tracking-wide leading-snug">{message}</p>
     </aside>
   );
 }

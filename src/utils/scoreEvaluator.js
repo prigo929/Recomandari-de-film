@@ -14,11 +14,11 @@ export const getRottenTomatoesScore = (ratings) => {
 
 export const getRecommendationMessage = (score) => {
   if (score === null || isNaN(score)) {
-    return "Nu există un scor Rotten Tomatoes pentru acest film.";
+    return { type: "neutral", message: "Nu există un scor Rotten Tomatoes pentru acest film." };
   }
 
-  if (score > 80) return "Ar trebui să vizionați acest film chiar acum!";
-  if (score < 50) return "Evitați acest film cu orice preț!";
+  if (score >= 80) return { type: "good", message: `Scor: ${score}%. Ar trebui să vizionați acest film chiar acum!` };
+  if (score <= 50) return { type: "bad", message: `Scor: ${score}%. Evitați acest film cu orice preț!` };
 
-  return "Filmul este mediocru. Decizia îți aparține.";
+  return { type: "neutral", message: `Scor: ${score}%. Filmul este mediocru. Decizia îți aparține.` };
 };

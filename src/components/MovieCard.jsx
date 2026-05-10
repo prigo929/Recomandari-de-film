@@ -1,41 +1,48 @@
-// Autor: Membrul 2 (UI/UX)
 import RecommendationBanner from './RecommendationBanner';
 
-export default function MovieCard({ movie, recommendation }) {
+export default function MovieCard({ movie, recommendation, isDarkMode }) {
   if (!movie) return null;
 
+  // Culori cu contrast extrem pentru vizibilitate 100%
+  const cardBg = isDarkMode ? "bg-[#1e293b] border-slate-600" : "bg-white border-gray-300";
+  const textTitle = isDarkMode ? "text-white" : "text-black";
+  const textBody = isDarkMode ? "text-gray-200" : "text-gray-800";
+  const tagBg = isDarkMode ? "bg-slate-700 border-slate-500 text-cyan-300" : "bg-gray-100 border-gray-300 text-blue-700";
+
   return (
-    <article className="bg-slate-800 rounded-3xl shadow-2xl overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row border border-slate-700/50">
+    <article className={`${cardBg} rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border-2 w-full transition-colors duration-300`}>
       
-      <figure className="md:w-1/3 flex-shrink-0 bg-slate-900 m-0 relative">
+      <figure className="md:w-2/5 flex-shrink-0 m-0 relative h-[500px] md:h-auto bg-black">
         <img 
-          src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/400x600/1e293b/ffffff?text=Poster+Indisponibil"} 
-          alt={`Poster oficial pentru filmul ${movie.Title}`} 
-          className="w-full h-full object-cover min-h-[400px]"
+          src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/400x600?text=Poster+Indisponibil"} 
+          alt={`Poster pentru ${movie.Title}`} 
+          className="absolute inset-0 w-full h-full object-cover object-center opacity-90"
         />
-        {/* Un mic gradient peste imagine pentru tranzitie lina in card */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-transparent to-transparent md:bg-gradient-to-l opacity-80"></div>
+        {/* Gradientul a fost redus pentru a nu ascunde detaliile din poză */}
+        <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-t from-slate-900/90 to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#1e293b]' : 'bg-gradient-to-t from-white/90 to-transparent md:bg-gradient-to-r md:from-transparent md:to-white'}`}></div>
       </figure>
 
-      <div className="p-8 md:w-2/3 flex flex-col justify-between text-left z-10">
+      <div className="p-8 md:p-12 md:w-3/5 flex flex-col justify-center text-left z-10">
         <header>
-          <h2 className="text-3xl font-black text-white mb-2 drop-shadow-md">
-            {movie.Title} <span className="text-slate-400 text-2xl font-medium">({movie.Year})</span>
+          <h2 className={`text-4xl md:text-5xl font-black mb-4 ${textTitle} leading-tight drop-shadow-sm`}>
+            {movie.Title} <span className="opacity-70 text-2xl md:text-3xl font-bold">({movie.Year})</span>
           </h2>
-          <div className="flex flex-wrap gap-3 text-xs text-slate-300 font-bold uppercase tracking-wider mb-6">
-            <span className="bg-slate-700/50 px-3 py-1.5 rounded-md border border-slate-600">{movie.Rated}</span>
-            <span className="bg-slate-700/50 px-3 py-1.5 rounded-md border border-slate-600">{movie.Runtime}</span>
-            <span className="bg-slate-700/50 px-3 py-1.5 rounded-md border border-slate-600 text-cyan-400">{movie.Genre}</span>
+          <div className="flex flex-wrap gap-3 text-sm font-bold uppercase tracking-wider mb-8">
+            <span className={`px-4 py-2 rounded-xl border-2 ${tagBg}`}>{movie.Rated}</span>
+            <span className={`px-4 py-2 rounded-xl border-2 ${tagBg}`}>{movie.Runtime}</span>
+            <span className={`px-4 py-2 rounded-xl border-2 ${tagBg}`}>{movie.Genre}</span>
           </div>
         </header>
 
-        <section className="mb-6 flex-grow">
-          <h3 className="text-lg font-bold text-slate-200 mb-2">Sinopsis:</h3>
-          <p className="text-slate-400 leading-relaxed text-base">{movie.Plot}</p>
+        <section className="mb-8 flex-grow">
+          <h3 className={`text-xl font-bold mb-3 ${textTitle}`}>Sinopsis:</h3>
+          <p className={`leading-relaxed text-lg font-medium ${textBody}`}>{movie.Plot}</p>
         </section>
 
         {recommendation && (
-          <RecommendationBanner type={recommendation.type} message={recommendation.message} />
+          <div className="mt-auto">
+            <RecommendationBanner type={recommendation.type} message={recommendation.message} isDarkMode={isDarkMode} />
+          </div>
         )}
       </div>
     </article>
