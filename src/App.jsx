@@ -29,7 +29,6 @@ function App() {
       // 1. Verificăm dacă avem datele în LocalStorage (Provocarea Cache)
       const cachedData = getMovieFromCache(searchTerm);
       if (cachedData) {
-        console.log("Date încărcate din CACHE");
         setIsCachedVersion(true);
         processAndSetData(cachedData);
         setLoading(false);
@@ -60,8 +59,20 @@ function App() {
   };
 
   return (
-    <div>
-      <h1>Recomandări de Film</h1>
+    // Fundal întunecat forțat: min-h-screen, bg-slate-950, w-full
+    <main className="min-h-screen w-full bg-slate-950 text-slate-200 py-16 px-4 sm:px-6 lg:px-8 font-sans selection:bg-cyan-500 selection:text-white">
+      <div className="max-w-4xl mx-auto text-center mb-14">
+        <h1 className="text-6xl font-black text-white mb-4 tracking-tight drop-shadow-2xl">
+          Cine
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            Verdict
+          </span>
+        </h1>
+        <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto">
+          Descoperă instantaneu dacă un film merită vizionat, bazat pe scorurile
+          criticilor și ale publicului.
+        </p>
+      </div>
 
       <form onSubmit={handleSearch}>
         <input
@@ -75,10 +86,18 @@ function App() {
         </button>
       </form>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <div
+          className="max-w-2xl mx-auto bg-rose-900/40 border border-rose-500/50 text-rose-300 p-5 rounded-xl shadow-lg mt-8 text-center backdrop-blur-sm"
+          role="alert"
+        >
+          <p className="font-bold text-lg mb-1">Eroare de sistem</p>
+          <p>{error}</p>
+        </div>
+      )}
 
-      {movieData && (
-        <div>
+      {!loading && movieData && (
+        <div className="mt-12 transition-all duration-700 ease-out opacity-100 translate-y-0 max-w-4xl mx-auto">
           {/* Indicator pentru prof că funcționează sistemul de caching */}
           {isCachedVersion && (
             <small style={{ color: "green" }}>
@@ -110,7 +129,7 @@ function App() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }
 
