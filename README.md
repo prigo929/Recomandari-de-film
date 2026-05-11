@@ -86,40 +86,41 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 4.  **Verdict:** În funcție de scor, se generează un mesaj (ex: "Evitați" sau "Vizionare obligatorie").
 5.  **Afișare:** Toate aceste informații ajung în `MovieCard.jsx` care le "colorează" frumos și le arată utilizatorului.
 
-### 🔍 Cum depanez (Debug) și înțeleg datele?
-
-Dacă ceva nu merge sau vrei să vezi ce date primești:
-*   **Consola Browserului:** Apasă `F12` (sau Right Click -> Inspect) și mergi la tab-ul **Console**. Acolo vei vedea erorile de rețea sau mesajele de test.
-*   **Network Tab:** Tot în `F12`, mergi la **Network** pentru a vedea cererile către OMDb. Poți da click pe ele să vezi exact ce răspuns trimite serverul (format JSON).
-
-### 🧪 De ce avem teste?
-În folderul `src/tests/` vei găsi fișiere care verifică dacă matematica noastră e corectă.
-*   Testele ne asigură că dacă modificăm ceva în viitor, nu stricăm logica de calcul a scorului.
-
 ---
 
 ## 📚 Mic Dicționar de Termeni (Cheat Sheet)
 
-Dacă vezi aceste cuvinte în cod și nu ești sigur ce fac, iată o explicație rapidă:
+### ⚛️ Logica React & JavaScript
+*   **`useState`**: Salvează date în memoria componentei (starea).
+*   **`useEffect`**: Execută cod automat (ex: la încărcarea paginii sau la schimbarea unei variabile).
+*   **`props`**: Datele trimise de la o componentă părinte la una copil.
+*   **`async / await`**: Spune codului să aștepte un răspuns de la internet fără a bloca restul aplicației.
+*   **`fetch`**: Comanda care face cererea propriu-zisă către un server (API).
+*   **`localStorage`**: Memoria browserului unde salvăm date care rămân acolo și după refresh (ex: Istoric).
+*   **`JSON.parse / stringify`**: Traducerea datelor între formatul de Obiect (JS) și formatul de Text (pentru salvare).
+*   **`try...catch`**: O plasă de siguranță care prinde erorile și previne oprirea aplicației.
 
-### Logica React
-*   **`useState`**: Salvează date în memoria componentei.
-*   **`useEffect`**: Execută cod automat la anumite schimbări.
-*   **`async/await`**: Spune codului să aștepte răspunsul de la internet înainte să continue.
+### 🏗️ Structura HTML & Componente
+*   **`div`**: O cutie generică pentru a grupa alte elemente.
+*   **`p` / `span`**: Elemente pentru text (paragraf sau text scurt în interiorul unui rând).
+*   **`section` / `article`**: Cutii cu nume specific care ajută la organizarea logică a paginii.
+*   **`export / import`**: Modul în care "legăm" fișierele între ele, permițând refolosirea codului.
 
-### Structura HTML
-*   **`div`**: O cutie folosită pentru a grupa elemente.
-*   **`p`**: Un paragraf de text.
-*   **`section` / `article`**: Cutii speciale care îi spun browserului ce fel de conținut este acolo.
-
-### Design (Tailwind CSS)
-*   **`w-full`**: Ocupă toată lățimea.
-*   **`max-w-4xl`**: Limitează lățimea pe ecrane mari pentru a arăta bine.
-*   **`mx-auto`**: Centrează elementul pe mijloc.
-*   **`rounded-[2.5rem]`**: Colțuri foarte rotunjite (aspect modern).
-*   **`flex-col md:flex-row`**: Pe mobil stau unul sub altul, pe calculator stau unul lângă altul.
-*   **`animate-pulse`**: Animație de tip "încărcare" (se aprinde/stinge).
-*   **`shadow-xl`**: Umbră fină care dă efect de adâncime.
+### 🎨 Design (Tailwind CSS)
+*   **`w-full` / `h-screen`**: Ocupă toată lățimea, respectiv toată înălțimea ecranului.
+*   **`max-w-4xl`**: Împiedică un element să devină prea lat pe ecrane mari.
+*   **`mx-auto`**: Centrează un element orizontal.
+*   **`flex / grid`**: Sisteme moderne de aliniere a elementelor.
+*   **`flex-col md:flex-row`**: Pe mobil stau pe verticală, pe calculator pe orizontală.
+*   **`gap-4`**: Spațiul gol dintre elementele dintr-o cutie.
+*   **`p-8` / `m-4`**: Spațiul interior (padding), respectiv exterior (margin).
+*   **`rounded-[2rem]`**: Colțuri rotunjite pentru un aspect modern.
+*   **`shadow-xl`**: Umbră care dă efect de profunzime.
+*   **`hover:bg-blue-500`**: Schimbă culoarea doar când pui mouse-ul deasupra.
+*   **`transition-all`**: Face schimbările de culori sau dimensiuni să fie line (animație).
+*   **`animate-pulse`**: Animație de tip "încărcare" (pâlpâire).
+*   **`backdrop-blur`**: Efect de "sticlă înghețată" (blur pe fundal).
+*   **`z-50` / `absolute`**: Controlul straturilor (ce stă deasupra cui) și poziționare liberă pe ecran.
 
 ---
 
