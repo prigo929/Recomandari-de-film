@@ -1,8 +1,12 @@
-/* Import Tailwind folosind noul standard v4 */
 @import "tailwindcss";
 
-/* Forțăm resetarea culorilor pe body ca să lăsăm React-ul să decidă tema Dark/Light */
+@theme {
+  --color-ivory: #fdfbf7;
+  --color-dark-bg: #0f172a;
+}
+
 body {
-  background-color: transparent;
-  color: inherit;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease;
 }
