@@ -7,9 +7,16 @@ import SearchHistory from './SearchHistory';
 import ActionButtons from './ActionButtons';
 
 export default function SearchBar({ onSearch, isDarkMode }) {
-  // Importăm curat toată logica din cele două Hook-uri personalizate
   const { recentSearches, addToHistory } = useSearchHistory();
-  const { query, handleInputChange, setQueryAndSkipSearch, suggestions, showDropdown, setShowDropdown } = useMovieAutocomplete();
+  const { 
+    query, 
+    handleInputChange, 
+    setQueryAndSkipSearch, 
+    setQueryAndFetchSilent, 
+    suggestions, 
+    showDropdown, 
+    setShowDropdown 
+  } = useMovieAutocomplete();
   
   const [availableMovies, setAvailableMovies] = useState(TOP_MOVIES);
   const dropdownRef = useRef(null);
@@ -54,7 +61,8 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     const newPool = pool.filter((_, index) => index !== randomIndex);
     setAvailableMovies(newPool);
 
-    setQueryAndSkipSearch(randomMovie);
+    // Funcția "tăcută": aduce datele în memorie, dar le ține ascunse până dai click pe bară
+    setQueryAndFetchSilent(randomMovie);
     executeSearch(randomMovie);
   };
 
@@ -69,6 +77,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
             type="text"
             value={query}
             onChange={handleInputChange}
+            // Aici se deschide lista ascunsă când dai click (focus)
             onFocus={() => { if (suggestions.length > 0) setShowDropdown(true); }}
             placeholder="Ex: The Matrix, Interstellar..."
             className={`

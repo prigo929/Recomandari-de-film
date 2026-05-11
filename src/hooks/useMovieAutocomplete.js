@@ -4,12 +4,22 @@ export function useMovieAutocomplete() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  
   const ignoreAutoSearch = useRef(false);
+  const silentFetch = useRef(false); // Flag pentru căutările "tăcute" din fundal
 
-  // Funcție sugestie, istoric sau butonul "Surprinde-mă"
-  // Schimbă textul din input, dar îi spune aplicației să NU mai caute la API (pentru că deja avem filmul exact).
+  // Folosită când dai click pe Istoric: pune textul, șterge sugestiile și ignoră API-ul
   const setQueryAndSkipSearch = (newQuery) => {
     ignoreAutoSearch.current = true;
+    setQuery(newQuery);
+    setSuggestions([]); 
+    setShowDropdown(false);
+  };
+
+  // Folosită de butonul Surprinde-mă: caută la API, dar NU deschide vizual lista
+  const setQueryAndFetchSilent = (newQuery) => {
+    ignoreAutoSearch.current = false;
+    silentFetch.current = true; // Activăm modul tăcut
     setQuery(newQuery);
     setShowDropdown(false);
   };
@@ -18,10 +28,11 @@ export function useMovieAutocomplete() {
     const val = e.target.value;
     setQuery(val);
     ignoreAutoSearch.current = false;
-    
+    silentFetch.current = false; // La tastare manuală, dezactivăm modul tăcut
+    setShowDropdown(false);
+
     if (val.trim().length < 3) {
       setSuggestions([]);
-      setShowDropdown(false);
     }
   };
 
@@ -33,33 +44,49 @@ export function useMovieAutocomplete() {
       return;
     }
     
+    let isActive = true;
+    
     const timeoutId = setTimeout(async () => {
       try {
         const key = import.meta.env.VITE_OMDB_API_KEY;
         const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${key}`);
         const data = await res.json();
         
+        if (!isActive) return;
+
         if (data.Response === "True") {
           setSuggestions(data.Search.slice(0, 5));
-          setShowDropdown(true);
+          
+          // Dacă NU suntem pe modul tăcut, arată dropdown-ul
+          if (!silentFetch.current) {
+            setShowDropdown(true); 
+          }
         } else {
           setSuggestions([]);
           setShowDropdown(false);
         }
+        
+        // Resetăm modul tăcut după prima execuție pentru ca viitoarele tastări să funcționeze normal
+        silentFetch.current = false;
+        
       } catch (err) { 
-        console.error("Eroare API Sugestii:", err); 
+        if (isActive) console.error("Eroare API Sugestii:", err); 
       }
     }, 400);
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      isActive = false;
+      clearTimeout(timeoutId);
+    };
   }, [query]);
 
   return {
     query,
     handleInputChange,
     setQueryAndSkipSearch,
+    setQueryAndFetchSilent,
     suggestions,
     showDropdown,
-    setShowDropdown
+    setShowDropdown 
   };
 }
