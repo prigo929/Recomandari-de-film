@@ -64,18 +64,33 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 4.  **Verdict:** În funcție de scor, se generează un mesaj (ex: "Evitați" sau "Vizionare obligatorie").
 5.  **Afișare:** Toate aceste informații ajung în `MovieCard.jsx` care le "colorează" frumos și le arată utilizatorului.
 
+### 🔍 Cum depanez (Debug) și înțeleg datele?
+
+Dacă ceva nu merge sau vrei să vezi ce date primești:
+*   **Consola Browserului:** Apasă `F12` (sau Right Click -> Inspect) și mergi la tab-ul **Console**. Acolo vei vedea erorile de rețea sau mesajele de test.
+*   **Network Tab:** Tot în `F12`, mergi la **Network** pentru a vedea cererile către OMDb. Poți da click pe ele să vezi exact ce răspuns trimite serverul (format JSON).
+*   **Structura Datelor:** Un film primit de la API arată așa:
+    ```json
+    {
+      "Title": "Inception",
+      "Year": "2010",
+      "Poster": "https://...",
+      "Ratings": [{ "Source": "Rotten Tomatoes", "Value": "87%" }]
+    }
+    ```
+    Dacă vrei să adaugi ceva nou (ex: regizorul), caută `{movie.Director}` în codul din `MovieCard.jsx`.
+
+### 🧪 De ce avem teste?
+În folderul `src/tests/` vei găsi fișiere care verifică dacă matematica noastră e corectă.
+*   Testele ne asigură că dacă modificăm ceva în viitor, nu stricăm logica de calcul a scorului.
+*   Poți adăuga teste noi în `scoreEvaluator.test.js` pentru a verifica scenarii noi (ex: ce se întâmplă dacă filmul are scor 0%).
+
 ### 🎨 Cum modific culorile și stilul?
 
 Folosim **Tailwind CSS**, ceea ce înseamnă că stilizarea se face direct în fișierele `.jsx` folosind clase CSS gata făcute:
 *   **Culori:** `bg-blue-600` (fundal), `text-white` (text), `border-gray-200` (margine).
 *   **Spațiere:** `p-4` (padding/spațiu interior), `m-2` (margin/spațiu exterior).
 *   **Responsive:** `flex-col md:flex-row` (pe mobil elementele stau unul sub altul, pe calculator stau unul lângă altul).
-
-### 📂 Structura Fișierelor pe scurt
-*   `src/api/`: Codul care "vorbește" cu internetul.
-*   `src/components/`: Piesele vizuale (Butoane, Carduri, Bare de căutare).
-*   `src/hooks/`: Logica reutilizabilă (ex: salvarea istoricului).
-*   `src/utils/`: "Calculatoarele" aplicației (extrag scoruri, verifică memoria cache).
 
 ### 🔄 Sincronizare Git (Recomandare)
 Dacă lucrezi în echipă și apar conflicte, folosește aceste comenzi pentru a fi sigur că ești la zi cu variabila "oficială" de pe server:
