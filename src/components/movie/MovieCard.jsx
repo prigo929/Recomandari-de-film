@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import RecommendationBanner from './RecommendationBanner';
 import PosterModal from './PosterModal';
-import StarRating from '../ui/StarRating';
+import StarRating from './StarRating';
 
 export default function MovieCard({ movie, recommendation, score, isDarkMode }) {
   const [showPosterModal, setShowPosterModal] = useState(false);
