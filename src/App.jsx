@@ -47,8 +47,12 @@ export default function App() {
   };
 
   return (
-    <main className={`min-h-screen transition-colors duration-500 py-12 px-4 ${isDarkMode ? "bg-slate-950 text-white" : "bg-[#fdfbf7] text-slate-900"}`}>
-      
+    <main 
+      className={`min-h-screen overflow-x-hidden transition-colors duration-500 py-12 px-4 ${
+        isDarkMode 
+          ? "bg-slate-950 text-white" 
+          : "bg-[#f4ece1] text-[#1c1917]" 
+      }`}>
       {/* Container Buton Temă */}
       <div className="max-w-5xl mx-auto flex justify-end mb-12">
         <button 
@@ -67,9 +71,12 @@ export default function App() {
       </div>
 
       <div className="text-center mb-16">
-        <h1 className="text-7xl font-black mb-4 tracking-tighter uppercase italic drop-shadow-sm flex items-center justify-center gap-1">
+        <h1 
+          onClick={() => window.location.reload()}
+          title="Acasă / Reîncarcă"
+          className="text-7xl font-black mb-4 tracking-tighter uppercase italic drop-shadow-sm flex items-center justify-center gap-1 cursor-pointer hover:scale-[1.02] transition-transform duration-300 active:scale-95"
+        >
           Cine<span className="text-cyan-500 not-italic">Verdict</span>
-          {/* Logo Fulger Cyan */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
                className="w-14 h-14 md:w-16 md:h-16 text-cyan-400 drop-shadow-[0_0_15px_rgba(6,182,212,0.6)] animate-pulse">
             <path d="M13 10h7l-9 13v-9h-7l9-13z"/>
