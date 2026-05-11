@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { fetchMovieData } from "./api/omdb";
 import { getRottenTomatoesScore, getRecommendationMessage } from "./utils/scoreEvaluator";
 import { getMovieFromCache, saveMovieToCache } from "./utils/cacheManager";
-import SearchBar from "./components/SearchBar";
-import MovieCard from "./components/MovieCard";
-import SkeletonCard from "./components/SkeletonCard";
+import SearchBar from "./components/search/SearchBar";
+import MovieCard from "./components/movie/MovieCard";
+import SkeletonCard from "./components/movie/SkeletonCard";
 
 export default function App() {
   const [movieData, setMovieData] = useState(null);
