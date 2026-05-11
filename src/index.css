@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
+/**
+ * index.css - Fișierul de stiluri globale.
+ * Aici configurăm Tailwind CSS și definim culori sau comportamente de bază pentru tot site-ul.
+ */
+
 @theme {
+  /* Definirea unor variabile de culoare personalizate care pot fi folosite în Tailwind. */
   --color-ivory: #fdfbf7;
   --color-dark-bg: #0f172a;
 }
@@ -8,5 +14,6 @@
 body {
   margin: 0;
   padding: 0;
+  /* Fontul default este setat automat de Tailwind, dar aici asigurăm o tranziție fluidă pentru fundal. */
   transition: background-color 0.3s ease;
 }
