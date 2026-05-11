@@ -40,33 +40,46 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 
 ---
 
-## 📖 Ghid pentru Începători (Cum să modifici proiectul)
+## 📖 Ghid pentru Începători (Concepte și Modificări)
 
-Dacă ești la început de drum cu React și Tailwind, iată câteva sfaturi pentru a personaliza această aplicație:
+Dacă ești la început de drum cu React și Tailwind, iată o explicație a modului în care funcționează "motorul" acestei aplicații:
+
+### 🧠 Concepte de bază în React
+
+1.  **State (`useState`) - Memoria Componentei:**
+    *   Imaginează-ți că `useState` este o cutie în care aplicația ține minte lucruri (ex: ce a scris utilizatorul, dacă se încarcă datele sau ce film am găsit).
+    *   Când conținutul cutiei se schimbă, React "re-desenează" automat ecranul.
+2.  **Props - Cum comunică componentele:**
+    *   Componentele sunt ca niște piese de LEGO. "Props" sunt instrucțiunile sau datele pe care o piesă părinte le trimite unei piese copil.
+    *   Exemplu: `App.jsx` trimite datele filmului către `MovieCard.jsx` prin props.
+3.  **Hooks (`useEffect`) - Reacții la schimbări:**
+    *   Îi spunem aplicației: "Când se întâmplă X, fă și Y".
+    *   Exemplu: "Când utilizatorul scrie 3 litere, caută automat sugestii în API".
+
+### ⚙️ Cum circulă datele în aplicație?
+
+1.  **Input:** Utilizatorul scrie în `SearchBar.jsx`.
+2.  **Cerere (Request):** Aplicația verifică întâi în `cacheManager.js` (memoria locală). Dacă nu există, `omdb.js` face un apel la serverul OMDb.
+3.  **Procesare:** Datele primite (scorurile) sunt trimise la `scoreEvaluator.js`. Acesta extrage procentul de la Rotten Tomatoes.
+4.  **Verdict:** În funcție de scor, se generează un mesaj (ex: "Evitați" sau "Vizionare obligatorie").
+5.  **Afișare:** Toate aceste informații ajung în `MovieCard.jsx` care le "colorează" frumos și le arată utilizatorului.
 
 ### 🎨 Cum modific culorile și stilul?
-Folosim **Tailwind CSS**, ceea ce înseamnă că stilizarea se face direct în fișierele `.jsx` folosind clase (proprietatea `className`).
-*   **Schimbare culori:** Caută clase de tipul `bg-blue-600` (fundal albastru) sau `text-slate-900` (text gri închis). Poți înlocui `blue` cu `emerald`, `rose`, `amber` etc.
-*   **Grosime text:** Folosește `font-bold` sau `font-black` pentru titluri.
-*   **Umbre:** Adaugă `shadow-xl` sau `shadow-2xl` pentru a scoate elementele în evidență.
 
-### 🏗️ Ce este JSX?
-Fișierele `.jsx` ne permit să scriem cod asemănător cu HTML direct în interiorul funcțiilor JavaScript.
-*   **Regulă importantă:** În loc de `class=""` (ca în HTML-ul clasic), folosim `className=""`.
-*   **Logicã:** Tot ce este între acolade `{ }` este cod JavaScript (ex: `{movie.Title}`).
+Folosim **Tailwind CSS**, ceea ce înseamnă că stilizarea se face direct în fișierele `.jsx` folosind clase CSS gata făcute:
+*   **Culori:** `bg-blue-600` (fundal), `text-white` (text), `border-gray-200` (margine).
+*   **Spațiere:** `p-4` (padding/spațiu interior), `m-2` (margin/spațiu exterior).
+*   **Responsive:** `flex-col md:flex-row` (pe mobil elementele stau unul sub altul, pe calculator stau unul lângă altul).
 
-### 📂 Unde găsesc ce am nevoie?
-*   **Vrei să schimbi cum arată un film?** Mergi în `src/components/MovieCard.jsx`.
-*   **Vrei să schimbi logica de recomandare?** Mergi în `src/utils/scoreEvaluator.js`.
-*   **Vrei să modifici bara de căutare?** Mergi în `src/components/SearchBar.jsx`.
-
-### 🛡️ Variabile de mediu (.env)
-Nu urca niciodată cheia API (`VITE_OMDB_API_KEY`) direct pe GitHub! Folosește fișierul `.env` care este deja ignorat prin `.gitignore`. Acesta păstrează cheile în siguranță pe calculatorul tău local.
+### 📂 Structura Fișierelor pe scurt
+*   `src/api/`: Codul care "vorbește" cu internetul.
+*   `src/components/`: Piesele vizuale (Butoane, Carduri, Bare de căutare).
+*   `src/hooks/`: Logica reutilizabilă (ex: salvarea istoricului).
+*   `src/utils/`: "Calculatoarele" aplicației (extrag scoruri, verifică memoria cache).
 
 ### 🔄 Sincronizare Git (Recomandare)
-Dacă lucrezi în echipă și apar conflicte după ce cineva a făcut modificări mari în istoric, folosește aceste comenzi pentru a fi sigur că ești la zi:
+Dacă lucrezi în echipă și apar conflicte, folosește aceste comenzi pentru a fi sigur că ești la zi cu variabila "oficială" de pe server:
 ```bash
 git fetch origin
 git reset --hard origin/main
 ```
-*Atenție: Această comandă va șterge orice modificare locală nesalvată!*
