@@ -91,28 +91,37 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 Dacă ceva nu merge sau vrei să vezi ce date primești:
 *   **Consola Browserului:** Apasă `F12` (sau Right Click -> Inspect) și mergi la tab-ul **Console**. Acolo vei vedea erorile de rețea sau mesajele de test.
 *   **Network Tab:** Tot în `F12`, mergi la **Network** pentru a vedea cererile către OMDb. Poți da click pe ele să vezi exact ce răspuns trimite serverul (format JSON).
-*   **Structura Datelor:** Un film primit de la API arată așa:
-    ```json
-    {
-      "Title": "Inception",
-      "Year": "2010",
-      "Poster": "https://...",
-      "Ratings": [{ "Source": "Rotten Tomatoes", "Value": "87%" }]
-    }
-    ```
-    Dacă vrei să adaugi ceva nou (ex: regizorul), caută `{movie.Director}` în codul din `MovieCard.jsx`.
 
 ### 🧪 De ce avem teste?
 În folderul `src/tests/` vei găsi fișiere care verifică dacă matematica noastră e corectă.
 *   Testele ne asigură că dacă modificăm ceva în viitor, nu stricăm logica de calcul a scorului.
-*   Poți adăuga teste noi în `scoreEvaluator.test.js` pentru a verifica scenarii noi (ex: ce se întâmplă dacă filmul are scor 0%).
 
-### 🎨 Cum modific culorile și stilul?
+---
 
-Folosim **Tailwind CSS**, ceea ce înneamnă că stilizarea se face direct în fișierele `.jsx` folosind clase CSS gata făcute:
-*   **Culori:** `bg-blue-600` (fundal), `text-white` (text), `border-gray-200` (margine).
-*   **Spațiere:** `p-4` (padding/spațiu interior), `m-2` (margin/spațiu exterior).
-*   **Responsive:** `flex-col md:flex-row` (pe mobil elementele stau unul sub altul, pe calculator stau unul lângă altul).
+## 📚 Mic Dicționar de Termeni (Cheat Sheet)
+
+Dacă vezi aceste cuvinte în cod și nu ești sigur ce fac, iată o explicație rapidă:
+
+### Logica React
+*   **`useState`**: Salvează date în memoria componentei.
+*   **`useEffect`**: Execută cod automat la anumite schimbări.
+*   **`async/await`**: Spune codului să aștepte răspunsul de la internet înainte să continue.
+
+### Structura HTML
+*   **`div`**: O cutie folosită pentru a grupa elemente.
+*   **`p`**: Un paragraf de text.
+*   **`section` / `article`**: Cutii speciale care îi spun browserului ce fel de conținut este acolo.
+
+### Design (Tailwind CSS)
+*   **`w-full`**: Ocupă toată lățimea.
+*   **`max-w-4xl`**: Limitează lățimea pe ecrane mari pentru a arăta bine.
+*   **`mx-auto`**: Centrează elementul pe mijloc.
+*   **`rounded-[2.5rem]`**: Colțuri foarte rotunjite (aspect modern).
+*   **`flex-col md:flex-row`**: Pe mobil stau unul sub altul, pe calculator stau unul lângă altul.
+*   **`animate-pulse`**: Animație de tip "încărcare" (se aprinde/stinge).
+*   **`shadow-xl`**: Umbră fină care dă efect de adâncime.
+
+---
 
 ### 🔄 Sincronizare Git (Recomandare)
 Dacă lucrezi în echipă și apar conflicte, folosește aceste comenzi pentru a fi sigur că ești la zi cu variabila "oficială" de pe server:
