@@ -6,7 +6,7 @@ export function useMovieAutocomplete() {
   const [showDropdown, setShowDropdown] = useState(false);
   const ignoreAutoSearch = useRef(false);
 
-  // Funcție folosită când dăm click pe o sugestie, istoric sau butonul "Surprinde-mă"
+  // Funcție sugestie, istoric sau butonul "Surprinde-mă"
   // Schimbă textul din input, dar îi spune aplicației să NU mai caute la API (pentru că deja avem filmul exact).
   const setQueryAndSkipSearch = (newQuery) => {
     ignoreAutoSearch.current = true;
