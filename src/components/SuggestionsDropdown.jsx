@@ -1,16 +1,39 @@
+/**
+ * Componenta SuggestionsDropdown - Lista de sugestii care apare sub input-ul de căutare.
+ * @param {Array} suggestions - Array de obiecte cu filme (Title, Year, Poster, imdbID).
+ * @param {Function} onSuggestionClick - Funcție apelată când se alege un film din listă.
+ * @param {boolean} isDarkMode - Dacă tema întunecată este activă.
+ */
 export default function SuggestionsDropdown({ suggestions, onSuggestionClick, isDarkMode }) {
+  // Dacă nu avem sugestii, nu randăm lista.
   if (!suggestions || suggestions.length === 0) return null;
 
   return (
+    /**
+     * absolute: Scoate elementul din fluxul normal pentru a pluti peste restul paginii.
+     * z-50: Se asigură că lista apare deasupra oricărui alt element.
+     * animate-in fade-in zoom-in-95: Clase de animație pentru o apariție fluidă.
+     */
     <ul className={`absolute z-50 w-full mt-3 rounded-3xl shadow-2xl border-2 overflow-hidden animate-in fade-in zoom-in-95 duration-200 ${
       isDarkMode ? "bg-slate-800 border-slate-700 divide-slate-700" : "bg-white border-gray-100 divide-gray-100"
     }`}>
       {suggestions.map((m) => (
+        /**
+         * Folosim onMouseDown în loc de onClick pentru a ne asigura că evenimentul 
+         * este declanșat înainte ca input-ul să piardă focusul (blur).
+         */
         <li key={m.imdbID} onMouseDown={() => onSuggestionClick(m.Title)}
             className={`flex items-center gap-4 p-4 cursor-pointer transition-colors ${
               isDarkMode ? "hover:bg-slate-700 text-white" : "hover:bg-cyan-50 text-slate-900"
             }`}>
-          <img src={m.Poster !== "N/A" ? m.Poster : "https://via.placeholder.com/40"} className="w-10 h-14 object-cover rounded shadow-sm border border-slate-500/30" alt="Poster" />
+          
+          {/* Imagine mică (Thumbnail) a filmului */}
+          <img 
+            src={m.Poster !== "N/A" ? m.Poster : "https://via.placeholder.com/40"} 
+            className="w-10 h-14 object-cover rounded shadow-sm border border-slate-500/30" 
+            alt="Poster" 
+          />
+          
           <div className="text-left flex flex-col">
             <span className="font-bold text-lg leading-tight">{m.Title}</span>
             <span className="font-medium text-sm opacity-50">{m.Year}</span>
