@@ -9,6 +9,7 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 *   **Sistem de Recomandări:** Analiză automată a scorurilor Rotten Tomatoes cu feedback vizual (Banner de recomandare).
 *   **UX Îmbunătățit:** Skeleton loading pentru a reduce timpul perceput de așteptare.
 *   **Caching Inteligent:** Stocare în `localStorage` cu timp de expirare pentru a optimiza apelurile API.
+*   **Vizualizare Imersivă:** Modal (pop-up) pentru mărirea posterelor și design responsiv adaptat pentru orice dispozitiv.
 
 ## 🛠️ Tehnologii Utilizate
 
@@ -60,6 +61,20 @@ Proiectul bifează următoarele puncte din baremul de evaluare:
     *   Mecanism de stocare în cache a datelor.
     *   Sugestii de căutare în timp real și Istoric integrat.
 
+## ✨ Cele mai bune practici (Best Practices)
+
+*   **Accesibilitate (A11y):** Folosim elemente semantice HTML5 (`main`, `section`, `article`, `header`) și atribute precum `alt` pentru imagini.
+*   **Performanță:** Imagini optimizate, debouncing pe input-ul de căutare și minimizarea re-randărilor prin utilizarea strategică a `useRef`.
+*   **Clean Code:** Respectăm principiul **DRY** (Don't Repeat Yourself) și **KISS** (Keep It Simple, Stupid), având o logică ușor de urmărit.
+
+## 🔮 Direcții de Viitor (Roadmap)
+
+Dacă am continua dezvoltarea proiectului, iată ce funcționalități am adăuga:
+*   **Watchlist:** Posibilitatea de a salva filmele favorite într-o listă personalizată.
+*   **Trailer Integration:** Integrare cu YouTube API pentru a vedea trailerul filmului direct în aplicație.
+*   **Filtrare Avansată:** Căutare după gen, regizor sau interval de ani.
+*   **Autentificare:** Conturi de utilizator pentru a păstra istoricul pe mai multe dispozitive.
+
 ---
 
 ## 📖 Ghid pentru Începători (Concepte și Modificări)
@@ -86,6 +101,24 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 4.  **Verdict:** În funcție de scor, se generează un mesaj (ex: "Evitați" sau "Vizionare obligatorie").
 5.  **Afișare:** Toate aceste informații ajung în `MovieCard.jsx` care le "colorează" frumos și le arată utilizatorului.
 
+### 📂 Structura Fișierelor (Unde găsesc X?)
+*   **src/api/** - Aici "vorbim" cu exteriorul. Conține funcțiile care cer date de la serverul OMDb.
+*   **src/utils/** - "Creierul" matematic. Funcții izolate care calculează scoruri sau gestionează memoria (cache). Nu conțin cod vizual.
+*   **src/components/** - "Piesele de LEGO". Fişierele vizuale (ex: `SearchBar`, `MovieCard`) pe care le asamblăm în pagina principală.
+*   **src/App.jsx** - Dispecerul central. Componenta care leagă interfața grafică de funcțiile logice.
+*   **package.json** - "Buletinul" aplicației. Listează bibliotecile externe folosite și scripturile executabile (`npm run dev`).
+
+### 🔐 Variabile de Mediu (.env) și Securitate
+*   **Ce sunt?** Fișierul `.env` stochează parole sau chei secrete (cum ar fi `VITE_OMDB_API_KEY`).
+*   **De ce nu le urcăm pe Git?** Fișierul `.gitignore` blochează intenționat fișierul `.env` pentru ca cheia ta API să nu devină publică pe internet.
+*   **Regula de aur:** Când descarci proiectul pe un PC nou, trebuie mereu să recreezi manual fișierul `.env`. Variabilele în Vite trebuie să înceapă obligatoriu cu `VITE_`.
+
+### 🛑 Erori Frecvente și Cum Să Le Rezolvi
+*   **Ecran complet alb (White Screen of Death):** Ai o eroare fatală de JavaScript la randare. Apasă `F12`, mergi la **Console** și citește textul roșu. De obicei este o proprietate apelată pe un obiect inexistent (ex: încerci să citești `movie.Title` înainte ca `movie` să primească datele din API).
+*   **Eroare 401 Unauthorized în consolă:** Cheia ta OMDb este invalidă sau serverul Vite nu a citit fișierul `.env`. Oprește terminalul (`Ctrl + C`) și repornește-l (`npm run dev`).
+*   **Modificările CSS/Tailwind nu apar pe ecran:** Asigură-re că fișierul în care lucrezi este prins în regulile din `tailwind.config.js` (în array-ul `content`). Altfel, Tailwind va șterge automat acele clase la compilare.
+*   **Datele "vechi" apar în continuare (Cache invalid):** Dacă faci teste și vrei să ignori sistemul nostru de stocare, deschide `F12` -> tab-ul **Application** -> **Local Storage** -> click dreapta pe domeniu și alege **Clear**.
+
 ---
 
 ## 📚 Mic Dicționar de Termeni (Cheat Sheet)
@@ -97,7 +130,7 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 *   **`async / await`**: Spune codului să aștepte un răspuns de la internet fără a bloca restul aplicației.
 *   **`fetch`**: Comanda care face cererea propriu-zisă către un server (API).
 *   **`localStorage`**: Memoria browserului unde salvăm date care rămân acolo și după refresh (ex: Istoric).
-*   **`JSON.parse / stringify`**: Traducerea datelor între formatul de Obiect (JS) și formatul de Text (pentru salvare).
+*   **`JSON.parse / stringify`**: Traducerea datelor între formatul de Obiect (JS) si formatul de Text (pentru salvare).
 *   **`try...catch`**: O plasă de siguranță care prinde erorile și previne oprirea aplicației.
 
 ### 🏗️ Structura HTML & Componente
