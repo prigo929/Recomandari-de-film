@@ -9,6 +9,7 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 *   **Sistem de Recomandări:** Analiză automată a scorurilor Rotten Tomatoes cu feedback vizual (Banner de recomandare).
 *   **UX Îmbunătățit:** Skeleton loading pentru a reduce timpul perceput de așteptare.
 *   **Caching Inteligent:** Stocare în `localStorage` cu timp de expirare pentru a optimiza apelurile API.
+*   **Vizualizare Imersivă:** Modal (pop-up) pentru mărirea posterelor și design responsiv adaptat pentru orice dispozitiv.
 
 ## 🛠️ Tehnologii Utilizate
 
@@ -59,6 +60,20 @@ Proiectul bifează următoarele puncte din baremul de evaluare:
     *   Utilizarea paradigmelor de programare reactivă (React) și funcțională (Utils).
     *   Mecanism de stocare în cache a datelor.
     *   Sugestii de căutare în timp real și Istoric integrat.
+
+## ✨ Cele mai bune practici (Best Practices)
+
+*   **Accesibilitate (A11y):** Folosim elemente semantice HTML5 (`main`, `section`, `article`, `header`) și atribute precum `alt` pentru imagini.
+*   **Performanță:** Imagini optimizate, debouncing pe input-ul de căutare și minimizarea re-randărilor prin utilizarea strategică a `useRef`.
+*   **Clean Code:** Respectăm principiul **DRY** (Don't Repeat Yourself) și **KISS** (Keep It Simple, Stupid), având o logică ușor de urmărit.
+
+## 🔮 Direcții de Viitor (Roadmap)
+
+Dacă am continua dezvoltarea proiectului, iată ce funcționalități am adăuga:
+*   **Watchlist:** Posibilitatea de a salva filmele favorite într-o listă personalizată.
+*   **Trailer Integration:** Integrare cu YouTube API pentru a vedea trailerul filmului direct în aplicație.
+*   **Filtrare Avansată:** Căutare după gen, regizor sau interval de ani.
+*   **Autentificare:** Conturi de utilizator pentru a păstra istoricul pe mai multe dispozitive.
 
 ---
 
