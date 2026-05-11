@@ -37,3 +37,96 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 ## 🧪 Rulare Teste
 
 `npm run test`
+
+## 📐 Arhitectură și Decizii Tehnice (Trade-offs)
+
+Pentru a asigura scalabilitatea și performanța aplicației, am luat următoarele decizii tehnice:
+
+*   **Vite vs. Create React App:** Am optat pentru Vite datorită timpului de build semnificativ redus și a utilizării modulelor ES native (ESM), ceea ce optimizează experiența de dezvoltare (HMR instant) comparativ cu bundle-urile greoaie bazate pe Webpack.
+*   **Stocare Cache (LocalStorage):** Pentru a evita interogările redundante (și eventualele costuri/limitări de rate-limiting ale API-ului extern), am implementat un sistem de cache în `localStorage` cu mecanism de expirare (stale-while-revalidate). Datele sunt reținute timp de 24 de ore.
+*   **Programare Funcțională:** Logica de business (evaluarea scorului și decizia recomandării) a fost complet decuplată de interfața grafică (UI). Funcțiile din `scoreEvaluator.js` sunt pure, ceea ce ne-a permis testarea lor unitară izolată, fără a randa componente de React în mediul de test.
+*   **Optimizare UX (Skeleton Loading):** Am prioritizat un *Core Web Vitals* optim, introducând componente de tip Skeleton în timpul latenței rețelei, pentru a evita un *Cumulative Layout Shift (CLS)* deranjant pentru utilizator.
+
+## 🎓 Conformitatea cu Cerințele Proiectului
+
+Proiectul bifează următoarele puncte din baremul de evaluare:
+*   ✅ **Modularizare și Comentarii:** Arhitectură separată pe directoare (`/api`, `/utils`, `/components`). Fiecare componentă are evidențiată contribuția membrului.
+*   ✅ **Testare Unitară:** Implementată cu Vitest pe logica decizională. Rulați `npm run test`.
+*   ✅ **Validare W3C:** Codul DOM randat este valid HTML5, iar clasele Tailwind CSS respectă standardele de validare.
+*   ✅ **Diagrame UML:** Diagramele *Use Case* și *Activity* sunt disponibile în format PDF în directorul `/docs`.
+*   ✅ **Deployment:** Aplicația rulează în producție pe Vercel: [INTRODU-LINK-UL-AICI]
+*   ⭐ **Funcționalități Bonus (Mărire Notă):**
+    *   Utilizarea paradigmelor de programare reactivă (React) și funcțională (Utils).
+    *   Mecanism de stocare în cache a datelor.
+    *   Sugestii de căutare în timp real și Istoric integrat.
+
+---
+
+## 📖 Ghid pentru Începători (Concepte și Modificări)
+
+Dacă ești la început de drum cu React și Tailwind, iată o explicație a modului în care funcționează "motorul" acestei aplicații:
+
+### 🧠 Concepte de bază în React
+
+1.  **State (`useState`) - Memoria Componentei:**
+    *   Imaginează-ți că `useState` este o cutie în care aplicația ține minte lucruri (ex: ce a scris utilizatorul, dacă se încarcă datele sau ce film am găsit).
+    *   Când conținutul cutiei se schimbă, React "re-desenează" automat ecranul.
+2.  **Props - Cum comunică componentele:**
+    *   Componentele sunt ca niște piese de LEGO. "Props" sunt instrucțiunile sau datele pe care o piesă părinte le trimite unei piese copil.
+    *   Exemplu: `App.jsx` trimite datele filmului către `MovieCard.jsx` prin props.
+3.  **Hooks (`useEffect`) - Reacții la schimbări:**
+    *   Îi spunem aplicației: "Când se întâmplă X, fă și Y".
+    *   Exemplu: "Când utilizatorul scrie 3 litere, caută automat sugestii în API".
+
+### ⚙️ Cum circulă datele în aplicație?
+
+1.  **Input:** Utilizatorul scrie în `SearchBar.jsx`.
+2.  **Cerere (Request):** Aplicația verifică întâi în `cacheManager.js` (memoria locală). Dacă nu există, `omdb.js` face un apel la serverul OMDb.
+3.  **Procesare:** Datele primite (scorurile) sunt trimise la `scoreEvaluator.js`. Acesta extrage procentul de la Rotten Tomatoes.
+4.  **Verdict:** În funcție de scor, se generează un mesaj (ex: "Evitați" sau "Vizionare obligatorie").
+5.  **Afișare:** Toate aceste informații ajung în `MovieCard.jsx` care le "colorează" frumos și le arată utilizatorului.
+
+---
+
+## 📚 Mic Dicționar de Termeni (Cheat Sheet)
+
+### ⚛️ Logica React & JavaScript
+*   **`useState`**: Salvează date în memoria componentei (starea).
+*   **`useEffect`**: Execută cod automat (ex: la încărcarea paginii sau la schimbarea unei variabile).
+*   **`props`**: Datele trimise de la o componentă părinte la una copil.
+*   **`async / await`**: Spune codului să aștepte un răspuns de la internet fără a bloca restul aplicației.
+*   **`fetch`**: Comanda care face cererea propriu-zisă către un server (API).
+*   **`localStorage`**: Memoria browserului unde salvăm date care rămân acolo și după refresh (ex: Istoric).
+*   **`JSON.parse / stringify`**: Traducerea datelor între formatul de Obiect (JS) și formatul de Text (pentru salvare).
+*   **`try...catch`**: O plasă de siguranță care prinde erorile și previne oprirea aplicației.
+
+### 🏗️ Structura HTML & Componente
+*   **`div`**: O cutie generică pentru a grupa alte elemente.
+*   **`p` / `span`**: Elemente pentru text (paragraf sau text scurt în interiorul unui rând).
+*   **`section` / `article`**: Cutii cu nume specific care ajută la organizarea logică a paginii.
+*   **`export / import`**: Modul în care "legăm" fișierele între ele, permițând refolosirea codului.
+
+### 🎨 Design (Tailwind CSS)
+*   **`w-full` / `h-screen`**: Ocupă toată lățimea, respectiv toată înălțimea ecranului.
+*   **`max-w-4xl`**: Împiedică un element să devină prea lat pe ecrane mari.
+*   **`mx-auto`**: Centrează un element orizontal.
+*   **`flex / grid`**: Sisteme moderne de aliniere a elementelor.
+*   **`flex-col md:flex-row`**: Pe mobil stau pe verticală, pe calculator pe orizontală.
+*   **`gap-4`**: Spațiul gol dintre elementele dintr-o cutie.
+*   **`p-8` / `m-4`**: Spațiul interior (padding), respectiv exterior (margin).
+*   **`rounded-[2rem]`**: Colțuri rotunjite pentru un aspect modern.
+*   **`shadow-xl`**: Umbră care dă efect de profunzime.
+*   **`hover:bg-blue-500`**: Schimbă culoarea doar când pui mouse-ul deasupra.
+*   **`transition-all`**: Face schimbările de culori sau dimensiuni să fie line (animație).
+*   **`animate-pulse`**: Animație de tip "încărcare" (pâlpâire).
+*   **`backdrop-blur`**: Efect de "sticlă înghețată" (blur pe fundal).
+*   **`z-50` / `absolute`**: Controlul straturilor (ce stă deasupra cui) și poziționare liberă pe ecran.
+
+---
+
+### 🔄 Sincronizare Git (Recomandare)
+Dacă lucrezi în echipă și apar conflicte, folosește aceste comenzi pentru a fi sigur că ești la zi cu variabila "oficială" de pe server:
+```bash
+git fetch origin
+git reset --hard origin/main
+```
