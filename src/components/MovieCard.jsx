@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import RecommendationBanner from './RecommendationBanner';
 
+/**
+ * --- Componente Interne pentru Rating (Steluțe) ---
+ */
 const StarFull = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400 drop-shadow-md"><path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" /></svg>
 );
@@ -18,11 +21,24 @@ const StarHalf = () => (
   </div>
 );
 
+/**
+ * Componenta MovieCard - Afișează detaliile filmului într-un format premium.
+ * @param {Object} movie - Datele primite de la API.
+ * @param {Object} recommendation - Mesajul de verdict.
+ * @param {number} score - Scorul numeric 0-100.
+ */
 export default function MovieCard({ movie, recommendation, score, isDarkMode }) {
+  /**
+   * Starea modalului (Pop-up):
+   * Îl folosim pentru a mări posterul când utilizatorul dă click pe el.
+   */
   const [showPosterModal, setShowPosterModal] = useState(false);
 
   if (!movie) return null;
 
+  /**
+   * getVerdictStyles - Determină culoarea marginii și a umbrei în funcție de cât de bun e filmul.
+   */
   const getVerdictStyles = () => {
     if (recommendation?.type === 'good') return "border-emerald-500 shadow-[0_0_30px_0px_rgba(16,185,129,0.7)]";
     if (recommendation?.type === 'bad') return "border-rose-500 shadow-[0_0_30px_0px_rgba(244,63,94,0.7)]";
@@ -35,6 +51,9 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
   const tagStyle = isDarkMode ? "bg-slate-700 text-cyan-400 border-slate-600" : "bg-gray-100 text-blue-600 border-gray-200";
   const verdictStyle = getVerdictStyles();
 
+  /**
+   * renderStars - Calculează și randează steluțele (scor / 20 = rating de la 0 la 5).
+   */
   const renderStars = () => {
     if (score === null || isNaN(score)) return <span className="opacity-50 text-sm italic">Fără scor oficial</span>;
     const rating = score / 20; 
@@ -54,15 +73,18 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
 
   return (
     <>
+      {/* Cardul Principal */}
       <article className={`rounded-[3rem] overflow-hidden flex flex-col md:flex-row border-4 transition-all duration-700 ease-out w-full ${cardBg} ${verdictStyle}`}>
         
+        {/* Zona Posterului */}
         <div className="md:w-2/5 relative h-[450px] md:h-auto overflow-hidden group">
           <img 
             src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/400x600?text=Fara+Poster"} 
             alt={movie.Title} 
-            onClick={() => setShowPosterModal(true)}
+            onClick={() => setShowPosterModal(true)} // Deschidem pop-up-ul la click.
             className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105" 
           />
+          {/* Overlay gradient pentru aspect cinematografic */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-black/50 pointer-events-none" />
           
           <div className="absolute bottom-6 left-6 md:hidden">
@@ -70,6 +92,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
           </div>
         </div>
         
+        {/* Detalii Film */}
         <div className="p-8 md:p-10 md:w-3/5 flex flex-col justify-center text-left relative">
           <header>
             <h2 className={`text-4xl md:text-5xl font-black mb-4 ${textTitle} leading-tight`}>
@@ -100,20 +123,25 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
         </div>
       </article>
 
-      {/* MODAL (POP-UP) PENTRU POSTER */}
+      {/* MODAL (POP-UP) - Apare peste tot restul paginii */}
       {showPosterModal && (
         <div 
+          /**
+           * z-[100] asigură că pop-up-ul stă deasupra tuturor elementelor.
+           * backdrop-blur-sm creează efectul de "sticlă înghețată" pe fundal.
+           */
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300"
-          onClick={() => setShowPosterModal(false)}
+          onClick={() => setShowPosterModal(false)} // Închidem dacă dăm click pe fundalul negru.
         >
           <div className="relative max-h-[90vh] max-w-[90vw] animate-in zoom-in-95 duration-300">
             <img 
               src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/400x600?text=Fara+Poster"} 
               alt={`${movie.Title} Poster`} 
               className="max-h-[90vh] object-contain rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.8)]"
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()} // Oprim închiderea dacă dăm click direct pe imagine.
             />
             
+            {/* Buton de închidere (X) */}
             <button 
               className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 text-white bg-slate-900/80 hover:bg-slate-700 p-2 sm:p-3 rounded-full backdrop-blur-md transition-all shadow-lg border border-white/20 hover:scale-110 active:scale-95"
               onClick={() => setShowPosterModal(false)}

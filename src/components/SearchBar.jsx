@@ -4,43 +4,71 @@ import { useSearchHistory } from '../hooks/useSearchHistory';
 import SuggestionsDropdown from './SuggestionsDropdown';
 import SearchHistory from './SearchHistory';
 
+/**
+ * Componenta SearchBar - Motorul de căutare al aplicației.
+ * Gestionează input-ul utilizatorului, sugestiile de la API și istoricul.
+ */
 export default function SearchBar({ onSearch, isDarkMode }) {
+  /**
+   * Stările componentei (State):
+   * query: Textul pe care îl scrie utilizatorul în input.
+   * suggestions: Lista de filme sugerate de API în timp ce scriem.
+   * showDropdown: Vizibilitatea listei de sugestii.
+   * availableMovies: Listă locală pentru funcția "Surprinde-mă".
+   */
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [availableMovies, setAvailableMovies] = useState(TOP_MOVIES);
   
+  // Custom Hook pentru a gestiona istoricul căutărilor salvat în LocalStorage.
   const { recentSearches, addToHistory } = useSearchHistory();
   
+  // useRef ne ajută să păstrăm referințe către elemente DOM sau valori persistente care nu declanșează re-randări.
   const dropdownRef = useRef(null);
   const ignoreAutoSearch = useRef(false);
 
+  /**
+   * handleInputChange - Se execută la fiecare literă tastată.
+   */
   const handleInputChange = (e) => {
     const val = e.target.value;
     setQuery(val);
-    ignoreAutoSearch.current = false;
+    ignoreAutoSearch.current = false; // Resetăm starea de ignorare la tastare nouă.
     
+    // Dacă avem mai puțin de 3 litere, curățăm sugestiile.
     if (val.trim().length < 3) {
       setSuggestions([]);
       setShowDropdown(false);
     }
   };
 
+  /**
+   * useEffect pentru Auto-Sugestii.
+   * Se declanșează de fiecare dată când se schimbă 'query'.
+   */
   useEffect(() => {
     if (query.trim().length < 3) return;
     
+    // Evităm căutarea automată dacă tocmai am selectat un film din listă.
     if (ignoreAutoSearch.current) {
       ignoreAutoSearch.current = false; 
       return;
     }
     
+    /**
+     * DEBOUNCING: Așteptăm 400ms după ce utilizatorul s-a oprit din tastat
+     * pentru a nu bombarda API-ul cu cereri inutile la fiecare literă.
+     */
     const timeoutId = setTimeout(async () => {
       try {
         const key = import.meta.env.VITE_OMDB_API_KEY;
+        // Folosim parametrul 's' de la OMDb pentru căutare parțială (search).
         const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${key}`);
         const data = await res.json();
         
         if (data.Response === "True") {
+          // Păstrăm doar primele 5 rezultate.
           setSuggestions(data.Search.slice(0, 5));
           setShowDropdown(true);
         } else {
@@ -52,9 +80,13 @@ export default function SearchBar({ onSearch, isDarkMode }) {
       }
     }, 400);
 
+    // Funcția de curățare (cleanup): anulează timeout-ul dacă 'query' se schimbă înainte de finalizarea timpului.
     return () => clearTimeout(timeoutId);
   }, [query]);
 
+  /**
+   * useEffect pentru a închide dropdown-ul dacă dăm click în afara lui.
+   */
   useEffect(() => {
     const close = (e) => { 
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -65,6 +97,9 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     return () => document.removeEventListener("mousedown", close);
   }, []);
 
+  /**
+   * handleSubmit - Când se apasă Enter sau butonul Caută.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.trim() !== '') {
@@ -74,14 +109,20 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     }
   };
 
+  /**
+   * handleSuggestionClick - Când se alege un film din dropdown.
+   */
   const handleSuggestionClick = (title) => {
-    ignoreAutoSearch.current = true;
+    ignoreAutoSearch.current = true; // Nu mai căutăm sugestii pentru acest titlu deja completat.
     setQuery(title);
     setShowDropdown(false);
     onSearch(title); 
     addToHistory(title);
   };
 
+  /**
+   * handleSurpriseMe - Alege un film aleatoriu din lista predefinită.
+   */
   const handleSurpriseMe = () => {
     let pool = availableMovies;
     if (pool.length === 0) pool = TOP_MOVIES;
@@ -89,6 +130,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     const randomIndex = Math.floor(Math.random() * pool.length);
     const randomMovie = pool[randomIndex];
 
+    // Eliminăm filmul ales din pool pentru a varia sugestiile.
     const newPool = pool.filter((_, index) => index !== randomIndex);
     setAvailableMovies(newPool);
 
@@ -99,6 +141,9 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     addToHistory(randomMovie);
   };
 
+  /**
+   * handleHistoryClick - Repetă o căutare din istoric.
+   */
   const handleHistoryClick = (historyItem) => {
     ignoreAutoSearch.current = true;
     setQuery(historyItem);
@@ -134,6 +179,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
             autoComplete="off"
           />
 
+          {/* Componenta care afișează lista de sugestii sub input */}
           {showDropdown && (
             <SuggestionsDropdown 
               suggestions={suggestions} 
@@ -143,6 +189,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
           )}
         </div>
         
+        {/* Butoanele principale de acțiune */}
         <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
           <button 
             type="submit" 
@@ -172,6 +219,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
           </button>
         </div>
 
+        {/* Secțiunea de Istoric */}
         <SearchHistory 
           recentSearches={recentSearches} 
           onHistoryClick={handleHistoryClick} 
