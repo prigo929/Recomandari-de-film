@@ -66,7 +66,7 @@ Proiectul bifează următoarele puncte din baremul de evaluare:
 *   ✅ **Testare Unitară:** Implementată cu Vitest pe logica decizională. Rulați `npm run test`.
 *   ✅ **Validare W3C:** Codul DOM randat este valid HTML5, iar clasele Tailwind CSS respectă standardele de validare.
 *   ✅ **Diagrame UML:** Diagramele *Use Case* și *Activity* sunt disponibile în format PDF în directorul `/docs`.
-*   ✅ **Deployment:** Aplicația rulează în producție pe Vercel: [INTRODU-LINK-UL-AICI]
+*   ✅ **Deployment:** Aplicația rulează în producție pe Vercel: https://recomandari-de-film.vercel.app/
 *   ⭐ **Funcționalități Bonus (Mărire Notă):**
     *   Utilizarea paradigmelor de programare reactivă (React) și funcțională (Utils).
     *   Mecanism de stocare în cache a datelor.
