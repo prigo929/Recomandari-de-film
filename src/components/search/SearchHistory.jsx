@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Interfață istoric căutări
+
 export default function SearchHistory({ recentSearches, onHistoryClick, isDarkMode }) {
   if (!recentSearches || recentSearches.length === 0) return null;
 

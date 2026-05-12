@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Implementare Skeleton Loading
+
 /**
  * Componenta SkeletonCard - Un "placeholder" animat afișat în timpul încărcării datelor.
  * Oferă utilizatorului un indiciu vizual că aplicația lucrează și urmează să afișeze conținut.

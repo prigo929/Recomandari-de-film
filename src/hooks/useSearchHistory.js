@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Gestiune istoric căutări în LocalStorage
+
 import { useState, useEffect } from 'react';
 
 /**

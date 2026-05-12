@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Design Banner Recomandare
+
 /**
  * Componenta RecommendationBanner - Afișează verdictul final pentru un film.
  * @param {string} type - Tipul recomandării: 'good', 'bad' sau 'neutral'.

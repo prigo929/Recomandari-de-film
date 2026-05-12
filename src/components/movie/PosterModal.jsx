@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Implementare Modal Poster
+
 export default function PosterModal({ isOpen, onClose, posterUrl, title }) {
   // Dacă modalul nu este setat să fie deschis, nu returnăm nimic
   if (!isOpen) return null;

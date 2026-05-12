@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Meniu sugestii în timp real
+
 import { useState } from 'react';
 
 export default function SuggestionsDropdown({ suggestions, onSuggestionClick, isDarkMode }) {

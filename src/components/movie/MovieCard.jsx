@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Interfață Card Film și logică vizuală
+
 import { useState } from 'react';
 import RecommendationBanner from './RecommendationBanner';
 import PosterModal from './PosterModal';

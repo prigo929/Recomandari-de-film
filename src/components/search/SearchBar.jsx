@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Motor de căutare principal și UI search
+
 import { useState, useEffect, useRef } from 'react';
 import { TOP_MOVIES } from '../../utils/constants';
 import { useSearchHistory } from '../../hooks/useSearchHistory';

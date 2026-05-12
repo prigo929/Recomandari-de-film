@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Butoane de acțiune și funcția "Surprinde-mă"
+
 export default function ActionButtons({ onSurpriseMe, isDarkMode }) {
   return (
     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
@@ -15,7 +17,7 @@ export default function ActionButtons({ onSurpriseMe, isDarkMode }) {
       </button>
       
       <button 
-        type="button"
+        type="button" 
         onClick={onSurpriseMe}
         className={`
           flex items-center justify-center gap-2 px-8 py-4 font-semibold uppercase tracking-tight rounded-full transition-all duration-300 active:scale-95 border-2 w-full sm:w-auto

@@ -1,3 +1,5 @@
+// Contribuție: Cosmin P. - Logică pentru autocompletare filme
+
 import { useState, useEffect, useRef } from 'react';
 
 export function useMovieAutocomplete() {
