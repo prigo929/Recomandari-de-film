@@ -8,7 +8,20 @@ import SearchBar from "./components/search/SearchBar";
 import MovieCard from "./components/movie/MovieCard";
 import SkeletonCard from "./components/movie/SkeletonCard";
 
+/**
+ * Componenta App - Rădăcina aplicației.
+ * Aici gestionăm starea globală (datele filmului, încărcarea, erorile și tema).
+ */
 export default function App() {
+  /**
+   * Stările aplicației (useState):
+   * movieData - obiectul cu detaliile filmului de la API.
+   * recommendation - verdictul calculat (good/bad/neutral).
+   * score - procentajul Rotten Tomatoes.
+   * loading - indicator de progres (true în timpul apelului API).
+   * error - mesaj de eroare dacă filmul nu e găsit.
+   * isCached - indică dacă datele vin din memoria locală (performanță).
+   */
   const [movieData, setMovieData] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
   const [score, setScore] = useState(null);
@@ -16,15 +29,27 @@ export default function App() {
   const [error, setError] = useState("");
   const [isCached, setIsCached] = useState(false);
   
+  // Tema Dark/Light salvată în browser pentru a persista după refresh.
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('cineverdict_theme');
+    // Default: Dark Mode (true) dacă nu există nimic salvat.
     return savedTheme !== null ? JSON.parse(savedTheme) : true;
   });
 
+  /**
+   * useEffect - Se execută ori de câte ori isDarkMode se schimbă.
+   * Salvăm alegerea utilizatorului în LocalStorage.
+   */
   useEffect(() => {
     localStorage.setItem('cineverdict_theme', JSON.stringify(isDarkMode));
   }, [isDarkMode]);
 
+  /**
+   * handleSearch - Funcție asincronă care coordonează fluxul de date:
+   * 1. Caută în Cache (LocalStorage).
+   * 2. Dacă nu există, face cerere la API (OMDb).
+   * 3. Procesează datele și actualizează interfața.
+   */
   const handleSearch = async (query) => {
     setLoading(true); 
     setError(""); 
@@ -33,6 +58,7 @@ export default function App() {
     setScore(null);
     
     try {
+      // Pasul 1: Verificare Cache
       const cached = getMovieFromCache(query);
       if (cached) {
         setIsCached(true);
@@ -40,15 +66,24 @@ export default function App() {
         setLoading(false);
         return;
       }
+
+      // Pasul 2: Apel API real
       const data = await fetchMovieData(query);
+      
+      // Pasul 3: Salvare în Cache pentru data viitoare
       saveMovieToCache(query, data);
       processAndSetData(data);
     } catch (err) { 
+      // Gestionarea erorilor de rețea sau API.
       setError(err.message); 
     }
     setLoading(false);
   };
 
+  /**
+   * processAndSetData - Centralizează logica de procesare a datelor.
+   * Extrage scorul și generează mesajul de recomandare.
+   */
   const processAndSetData = (data) => {
     setMovieData(data);
     const computedScore = getRottenTomatoesScore(data.Ratings);
@@ -59,6 +94,7 @@ export default function App() {
   return (
     <main className={`min-h-screen overflow-x-hidden transition-colors duration-500 py-12 px-4 ${isDarkMode ? "bg-slate-950 text-white" : "bg-[#f4ece1] text-[#1c1917]"}`}>
       
+      {/* Zona pentru schimbarea temei */}
       <div className="max-w-5xl mx-auto flex justify-end mb-12">
         <button 
           onClick={() => setIsDarkMode(!isDarkMode)} 
@@ -75,6 +111,7 @@ export default function App() {
         </button>
       </div>
 
+      {/* Titlul aplicației și Logo-ul animat */}
       <div className="text-center mb-16">
         <h1 
           onClick={() => window.location.reload()}
@@ -89,13 +126,22 @@ export default function App() {
         <p className="text-xl opacity-60 font-medium select-none">Verdictul criticilor, direct pe ecranul tău.</p>
       </div>
 
+      {/* Componenta de Căutare */}
       <SearchBar onSearch={handleSearch} isDarkMode={isDarkMode} />
 
+      {/* Secțiunea de Afișare Rezultate */}
       <section className="mt-16 max-w-4xl mx-auto min-h-[400px]">
+        {/**
+         * Redare Condițională:
+         * 1. loading - arătăm scheletul de încărcare.
+         * 2. error - arătăm eroarea.
+         * 3. movieData - arătăm cardul cu filmul.
+         */}
         {loading ? <SkeletonCard isDarkMode={isDarkMode} /> : 
          error ? <div className="p-8 bg-red-500/10 border-2 border-red-500 text-red-500 rounded-3xl text-center font-bold text-xl">{error}</div> :
          movieData && (
            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
+             {/* Notificare vizuală dacă filmul a fost servit din cache */}
              {isCached && (
                <div className="text-right mb-4">
                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-cyan-500/10 text-cyan-500 rounded-full font-black text-xs uppercase tracking-widest border border-cyan-500/30 shadow-sm select-none">
