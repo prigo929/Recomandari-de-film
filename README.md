@@ -20,14 +20,16 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 
 ## Membrii Echipei și Contribuții
 
-*   **Alin P.**
-    *   Setup arhitectură React și integrare API.
-    *   Sistem de Caching și logică decizională (score evaluator).
-    *   Testare automată (Vitest).
-*   **Cosmin P.**
-    *   Design UI/UX și implementare Tailwind CSS.
-    *   Istoric căutări și dropdown de sugestii.
-    *   Elemente de Skeleton Loading și branding assets.
+*   **Alin P.** (Membrul 1)
+    *   Setup arhitectură React (Vite).
+    *   Integrare API (`fetch` către OMDb) și data handling.
+    *   Implementare mecanism de Caching cu expirare (LocalStorage).
+    *   Scriere logică decizională (Programare Funcțională) și teste unitare (Vitest).
+*   **Cosmin P.** (Membrul 2)
+    *   Proiectare și implementare interfață grafică (UI/UX) cu Tailwind CSS.
+    *   Validare W3C pentru structura HTML5 și CSS3.
+    *   Realizare diagrame UML (Use Case, Activity).
+    *   Înregistrare video și deployment platformă (Vercel/Render).
 
 ## 🚀 Rulare Proiect
 
@@ -104,7 +106,8 @@ Dacă ești la început de drum cu React și Tailwind, iată o explicație a mod
 ### 📂 Structura Fișierelor (Unde găsesc X?)
 *   **src/api/** - Aici "vorbim" cu exteriorul. Conține funcțiile care cer date de la serverul OMDb.
 *   **src/utils/** - "Creierul" matematic. Funcții izolate care calculează scoruri sau gestionează memoria (cache). Nu conțin cod vizual.
-*   **src/components/** - "Piesele de LEGO". Fişierele vizuale (ex: `SearchBar`, `MovieCard`) pe care le asamblăm în pagina principală.
+*   **src/components/** - "Piesele de LEGO". Organizate în `/movie` (pentru afișare) și `/search` (pentru interacțiune).
+*   **src/hooks/** - Logica reutilizabilă pentru funcții speciale (Autocomplete, Istoric).
 *   **src/App.jsx** - Dispecerul central. Componenta care leagă interfața grafică de funcțiile logice.
 *   **package.json** - "Buletinul" aplicației. Listează bibliotecile externe folosite și scripturile executabile (`npm run dev`).
 
