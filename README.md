@@ -39,7 +39,16 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 
 ## 🧪 Rulare Teste
 
-`npm run test`
+Pentru a verifica integritatea logicii de business și a sistemului de cache, rulează:
+```bash
+npm run test
+```
+
+### 👨‍🏫 Ghid pentru Prezentare (Validare Teste)
+Dacă la prezentarea proiectului profesorul întreabă despre **Unit Testing**, urmează acești pași:
+1.  Deschide terminalul în folderul proiectului.
+2.  Execută comanda `npm run test`.
+3.  Vei vedea un raport verde care confirmă că toate cele **7 teste** au trecut cu succes (5 pentru logica de scor și 2 pentru validarea memoriei cache).
 
 ## 📐 Arhitectură și Decizii Tehnice (Trade-offs)
 
