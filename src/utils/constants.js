@@ -1,3 +1,5 @@
+// Contribuție: Alin P. - Constante globale proiect
+
 /**
  * TOP_MOVIES - O listă de titluri de filme "cult" sau foarte populare.
  * Aceasta este folosită în special pentru funcția "Surprinde-mă", 

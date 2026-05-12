@@ -1,3 +1,5 @@
+// Contribuție: Alin P. - Setup arhitectură React și gestionare stare globală
+
 import { useState, useEffect } from "react";
 import { fetchMovieData } from "./api/omdb";
 import { getRottenTomatoesScore, getRecommendationMessage } from "./utils/scoreEvaluator";
@@ -21,93 +23,114 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('cineverdict_theme', JSON.stringify(isDarkMode));
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, [isDarkMode]);
 
-  const handleSearch = async (query) => {
-    setLoading(true); 
-    setError(""); 
-    setMovieData(null); 
-    setIsCached(false); 
+  const handleSearch = async (title) => {
+    setLoading(true);
+    setError("");
+    setMovieData(null);
+    setRecommendation(null);
     setScore(null);
-    
+    setIsCached(false);
+
     try {
-      const cached = getMovieFromCache(query);
+      const cached = getMovieFromCache(title);
       if (cached) {
+        setMovieData(cached);
+        const rtScore = getRottenTomatoesScore(cached);
+        setScore(rtScore);
+        setRecommendation(getRecommendationMessage(rtScore));
         setIsCached(true);
-        processAndSetData(cached);
         setLoading(false);
         return;
       }
-      const data = await fetchMovieData(query);
-      saveMovieToCache(query, data);
-      processAndSetData(data);
-    } catch (err) { 
-      setError(err.message); 
-    }
-    setLoading(false);
-  };
 
-  const processAndSetData = (data) => {
-    setMovieData(data);
-    const computedScore = getRottenTomatoesScore(data.Ratings);
-    setScore(computedScore);
-    setRecommendation(getRecommendationMessage(computedScore));
+      const data = await fetchMovieData(title);
+      
+      if (data.Response === "True") {
+        setMovieData(data);
+        saveMovieToCache(title, data);
+        
+        const rtScore = getRottenTomatoesScore(data);
+        setScore(rtScore);
+        setRecommendation(getRecommendationMessage(rtScore));
+      } else {
+        setError(data.Error || "Filmul nu a fost găsit.");
+      }
+    } catch (err) {
+      setError("A apărut o eroare la conectarea cu serverul.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <main className={`min-h-screen overflow-x-hidden transition-colors duration-500 py-12 px-4 ${isDarkMode ? "bg-slate-950 text-white" : "bg-[#f4ece1] text-[#1c1917]"}`}>
+    <div className={`min-h-screen transition-colors duration-500 font-sans selection:bg-cyan-500 selection:text-white ${isDarkMode ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       
-      <div className="max-w-5xl mx-auto flex justify-end mb-12">
-        <button 
-          onClick={() => setIsDarkMode(!isDarkMode)} 
-          className={`
-            flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-bold 
-            border-2 transition-all duration-300 active:scale-95 outline-none select-none
-            ${isDarkMode 
-              ? "bg-slate-800 border-slate-600 text-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.05)] hover:border-yellow-400/50 hover:shadow-[0_0_15px_rgba(250,204,21,0.15)]" 
-              : "bg-white border-gray-300 text-slate-700 shadow-sm hover:border-gray-400 hover:shadow-md"
-            }
-          `}
-        >
-          {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
-      </div>
+      {/* BUTON SCHIMBARE TEMĂ */}
+      <button 
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className="fixed top-6 right-6 z-50 p-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:scale-110 active:scale-95 transition-all shadow-xl group"
+        title={isDarkMode ? "Lumina" : "Întuneric"}
+      >
+        <span className="text-2xl group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">
+          {isDarkMode ? "☀️" : "🌙"}
+        </span>
+      </button>
 
-      <div className="text-center mb-16">
-        <h1 
-          onClick={() => window.location.reload()}
-          className="text-7xl font-black mb-4 tracking-tighter uppercase italic drop-shadow-sm flex items-center justify-center gap-1 cursor-pointer hover:scale-[1.02] transition-transform duration-300 active:scale-95 select-none"
-        >
-          Cine<span className="text-cyan-500 not-italic">Verdict</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" 
-               className="w-14 h-14 md:w-16 md:h-16 text-cyan-400 drop-shadow-[0_0_15px_rgba(6,182,212,0.6)] animate-pulse">
-            <path d="M13 10h7l-9 13v-9h-7l9-13z"/>
-          </svg>
-        </h1>
-        <p className="text-xl opacity-60 font-medium select-none">Verdictul criticilor, direct pe ecranul tău.</p>
-      </div>
+      <main className="container mx-auto px-4 py-12 md:py-20 flex flex-col items-center min-h-screen">
+        
+        {/* HEADER */}
+        <header className="mb-12 text-center animate-in fade-in slide-in-from-top-10 duration-1000">
+          <div className="inline-block px-4 py-1.5 mb-6 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-black uppercase tracking-[0.2em]">
+            Proiect Web - 13
+          </div>
+          <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter leading-none">
+            Cine<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Verdict</span>
+          </h1>
+          <p className="text-xl md:text-2xl font-medium opacity-60 max-w-xl mx-auto leading-relaxed">
+            Află instant dacă merită să vezi un film folosind scorurile oficiale Rotten Tomatoes.
+          </p>
+        </header>
 
-      <SearchBar onSearch={handleSearch} isDarkMode={isDarkMode} />
+        {/* SEARCH BAR */}
+        <div className="w-full mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+          <SearchBar onSearch={handleSearch} isDarkMode={isDarkMode} />
+        </div>
 
-      <section className="mt-16 max-w-4xl mx-auto min-h-[400px]">
-        {loading ? <SkeletonCard isDarkMode={isDarkMode} /> : 
-         error ? <div className="p-8 bg-red-500/10 border-2 border-red-500 text-red-500 rounded-3xl text-center font-bold text-xl">{error}</div> :
-         movieData && (
-           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-             {isCached && (
-               <div className="text-right mb-4">
-                 <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-cyan-500/10 text-cyan-500 rounded-full font-black text-xs uppercase tracking-widest border border-cyan-500/30 shadow-sm select-none">
-                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                     <path d="M13 10h7l-9 13v-9h-7l9-13z"/>
-                   </svg>
-                   Din Cache
-                 </span>
-               </div>
-             )}
-             <MovieCard movie={movieData} recommendation={recommendation} score={score} isDarkMode={isDarkMode} />
-           </div>
-         )}
-      </section>
-    </main>
+        {/* REZULTAT (Card sau Skeleton) */}
+        <section className="w-full max-w-4xl animate-in fade-in zoom-in-95 duration-700">
+          {loading && <SkeletonCard isDarkMode={isDarkMode} />}
+          
+          {error && (
+            <div className="p-8 rounded-[2.5rem] bg-rose-500/10 border-2 border-rose-500/20 text-rose-400 text-center font-bold text-xl shadow-2xl animate-in shake duration-500">
+              <span className="text-3xl block mb-2">⚠️</span> {error}
+            </div>
+          )}
+
+          {movieData && !loading && (
+            <div className="relative">
+              {isCached && (
+                <div className="absolute -top-4 -right-4 z-10 bg-emerald-500 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg animate-bounce">
+                  Din Cache
+                </div>
+              )}
+              <MovieCard 
+                movie={movieData} 
+                recommendation={recommendation} 
+                score={score} 
+                isDarkMode={isDarkMode} 
+              />
+            </div>
+          )}
+        </section>
+
+      </main>
+    </div>
   );
 }
