@@ -8,7 +8,17 @@ import SuggestionsDropdown from './SuggestionsDropdown';
 import SearchHistory from './SearchHistory';
 import ActionButtons from './ActionButtons';
 
+/**
+ * Componenta SearchBar - "Creierul" interacțiunii utilizatorului cu aplicația.
+ * Coordonează căutarea, autocompletarea și istoricul.
+ */
 export default function SearchBar({ onSearch, isDarkMode }) {
+  /**
+   * Folosim Custom Hooks pentru a menține SearchBar curat.
+   * Logică extrasă: 
+   * - useSearchHistory: gestiunea listei de căutări recente.
+   * - useMovieAutocomplete: comunicarea cu API-ul pentru sugestii pe măsură ce scrii.
+   */
   const { recentSearches, addToHistory } = useSearchHistory();
   const { 
     query, 
@@ -20,50 +30,78 @@ export default function SearchBar({ onSearch, isDarkMode }) {
     setShowDropdown 
   } = useMovieAutocomplete();
   
+  // O listă locală de filme pentru funcția "Surprinde-mă".
   const [availableMovies, setAvailableMovies] = useState(TOP_MOVIES);
+  
+  /**
+   * useRef - Creează o "referință" către un element din pagină.
+   * O folosim aici pentru a detecta dacă utilizatorul dă click în afara barei de căutare.
+   */
   const dropdownRef = useRef(null);
 
-  // Închidem lista de sugestii dacă dăm click în afara ei
+  /**
+   * useEffect pentru închiderea automată a listei de sugestii.
+   * Adăugăm un "event listener" global (pe tot documentul).
+   */
   useEffect(() => {
     const close = (e) => { 
+      // Dacă dăm click și acel click NU este în interiorul dropdownRef, închidem lista.
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setShowDropdown(false);
       }
     };
     document.addEventListener("mousedown", close);
+    // Funcția de "cleanup": eliminăm ascultătorul când componenta este distrusă.
     return () => document.removeEventListener("mousedown", close);
   }, [setShowDropdown]);
 
-  // Funcția principală care execută căutarea
+  /**
+   * executeSearch - Centralizează pornirea unei căutări:
+   * 1. Trimite cererea la App.jsx (prin onSearch).
+   * 2. Salvează termenul în istoricul LocalStorage.
+   */
   const executeSearch = (searchTerm) => {
     onSearch(searchTerm);
     addToHistory(searchTerm);
   };
 
+  /**
+   * handleSubmit - Se declanșează la apăsarea tastei Enter sau a butonului de tip "submit".
+   */
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevenim reîncărcarea paginii (comportamentul implicit al browserului).
     if (query.trim() !== '') {
       executeSearch(query);
       setShowDropdown(false);
     }
   };
 
+  /**
+   * Gestionăm cazul în care utilizatorul dă click pe o sugestie sau pe un item din istoric.
+   */
   const handleSuggestionOrHistoryClick = (title) => {
-    setQueryAndSkipSearch(title);
+    setQueryAndSkipSearch(title); // Punem textul în bară dar oprim căutarea automată de sugestii.
     executeSearch(title);
   };
 
+  /**
+   * handleSurpriseMe - Alege un film aleatoriu din lista de constante.
+   */
   const handleSurpriseMe = () => {
     let pool = availableMovies;
-    if (pool.length === 0) pool = TOP_MOVIES;
+    if (pool.length === 0) pool = TOP_MOVIES; // Resetăm dacă am terminat lista.
 
     const randomIndex = Math.floor(Math.random() * pool.length);
     const randomMovie = pool[randomIndex];
 
+    // Eliminăm filmul ales din pool pentru a nu-l repeta imediat.
     const newPool = pool.filter((_, index) => index !== randomIndex);
     setAvailableMovies(newPool);
 
-    // Funcția "tăcută": aduce datele în memorie, dar le ține ascunse până dai click pe bară
+    /**
+     * setQueryAndFetchSilent: Aduce datele în memorie "în spate",
+     * fără a afișa lista de sugestii vizual.
+     */
     setQueryAndFetchSilent(randomMovie);
     executeSearch(randomMovie);
   };
@@ -79,7 +117,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
             type="text"
             value={query}
             onChange={handleInputChange}
-            // Aici se deschide lista ascunsă când dai click (focus)
+            // Deschidem lista de sugestii când utilizatorul dă click în bară.
             onFocus={() => { if (suggestions.length > 0) setShowDropdown(true); }}
             placeholder="Ex: The Matrix, Interstellar..."
             className={`
@@ -98,6 +136,7 @@ export default function SearchBar({ onSearch, isDarkMode }) {
             autoComplete="off"
           />
 
+          {/* Afișarea condiționată a meniului de sugestii (autocomplete). */}
           {showDropdown && (
             <SuggestionsDropdown 
               suggestions={suggestions} 
@@ -107,13 +146,13 @@ export default function SearchBar({ onSearch, isDarkMode }) {
           )}
         </div>
         
-        {/* Butoanele: "Caută" și "Surprinde-mă" */}
+        {/* Butoanele de acțiune (compozate ca piesă separată). */}
         <ActionButtons 
           onSurpriseMe={handleSurpriseMe} 
           isDarkMode={isDarkMode} 
         />
 
-        {/* Istoricul Căutărilor */}
+        {/* Istoricul Căutărilor (vizibil doar dacă există date salvate). */}
         <SearchHistory 
           recentSearches={recentSearches} 
           onHistoryClick={handleSuggestionOrHistoryClick} 

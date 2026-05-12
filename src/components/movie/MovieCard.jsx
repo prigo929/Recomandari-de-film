@@ -5,21 +5,40 @@ import RecommendationBanner from './RecommendationBanner';
 import PosterModal from './PosterModal';
 import StarRating from './StarRating';
 
+/**
+ * Componenta MovieCard - Responsabilă pentru afișarea detaliată a unui film.
+ * Primește datele filmului prin "props" (proprietăți) de la componenta părinte App.
+ */
 export default function MovieCard({ movie, recommendation, score, isDarkMode }) {
+  /**
+   * useState - Un "Hook" de React care permite componentei să țină minte informații.
+   * showPosterModal: reține dacă fereastra pop-up cu posterul mărit este deschisă.
+   * imageError: reține dacă imaginea posterului a eșuat la încărcare (ex: link invalid).
+   */
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [prevMovieId, setPrevMovieId] = useState(movie?.imdbID);
 
+  /**
+   * Logică de resetare a stării: Când căutăm un film nou, trebuie să resetăm erorile 
+   * și modalul de la filmul precedent.
+   */
   if (movie && movie.imdbID !== prevMovieId) {
     setPrevMovieId(movie.imdbID);
     setImageError(false);
     setShowPosterModal(false);
   }
 
+  // Dacă nu avem date despre film, nu randăm nimic (prevenim erori de afișare).
   if (!movie) return null;
 
+  // Verificăm dacă posterul lipsește din baza de date OMDb sau dacă a dat eroare.
   const isPosterMissing = movie.Poster === "N/A" || imageError;
 
+  /**
+   * getVerdictStyles - O funcție care alege culorile bordurii și umbrei (glow effect) 
+   * în funcție de recomandarea primită (bun, rău sau neutru).
+   */
   const getVerdictStyles = () => {
     if (recommendation?.type === 'good') return "border-emerald-500 shadow-[0_0_30px_0px_rgba(16,185,129,0.7)]";
     if (recommendation?.type === 'bad') return "border-rose-500 shadow-[0_0_30px_0px_rgba(244,63,94,0.7)]";
@@ -27,6 +46,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
     return isDarkMode ? "border-slate-700 shadow-2xl" : "border-gray-300 shadow-2xl";
   };
 
+  // Definirea variabilelor de stil bazate pe tema aleasă (Dark/Light Mode).
   const cardBg = isDarkMode ? "bg-slate-800" : "bg-white";
   const textTitle = isDarkMode ? "text-white" : "text-slate-900";
   const tagStyle = isDarkMode ? "bg-slate-700 text-cyan-400 border-slate-600" : "bg-gray-100 text-blue-600 border-gray-200";
@@ -34,6 +54,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
 
   return (
     <>
+      {/* Elementul principal <article> este folosit pentru conținut de sine stătător. */}
       <article className={`rounded-[3rem] overflow-hidden flex flex-col md:flex-row border-4 transition-all duration-700 ease-out w-full ${cardBg} ${verdictStyle}`}>
         
         {/* ZONA POSTERULUI */}
@@ -45,10 +66,11 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
             </div>
           ) : (
             <>
+              {/* Imaginea filmului cu eveniment de click pentru mărire. */}
               <img 
                 src={movie.Poster} 
                 alt={movie.Title} 
-                onError={() => setImageError(true)}
+                onError={() => setImageError(true)} // Declanșat dacă imaginea nu se poate încărca.
                 onClick={() => setShowPosterModal(true)}
                 className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105" 
               />
@@ -56,6 +78,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
             </>
           )}
           
+          {/* Rating-ul sub formă de stele (vizibil doar pe mobil în această poziție). */}
           <StarRating score={score} className="absolute bottom-6 left-6 md:hidden mb-0" />
         </div>
         
@@ -66,6 +89,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
               {movie.Title} <span className="opacity-50 text-2xl md:text-3xl font-bold">({movie.Year})</span>
             </h2>
             
+            {/* Afișarea etichetelor (Rated, Runtime, Genre) folosind metoda .map() pentru eficiență. */}
             <div className="flex flex-wrap gap-3 mb-6">
               {[movie.Rated, movie.Runtime, movie.Genre].map(t => (
                 <span key={t} className={`px-4 py-1.5 rounded-xl border-2 font-bold text-xs uppercase tracking-widest ${tagStyle}`}>{t}</span>
@@ -73,13 +97,16 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
             </div>
           </header>
 
+          {/* Rating-ul sub formă de stele (vizibil pe desktop). */}
           <StarRating score={score} className="hidden md:flex mb-4" />
 
+          {/* Sinopsisul filmului. */}
           <section className="mb-8 flex-grow">
             <h3 className={`text-lg font-bold mb-2 uppercase tracking-widest opacity-40 ${textTitle}`}>Sinopsis</h3>
             <p className={`text-lg leading-relaxed font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>{movie.Plot}</p>
           </section>
 
+          {/* Banner-ul de recomandare afișat doar dacă avem un verdict calculat. */}
           {recommendation && (
             <div className="mt-auto">
               <RecommendationBanner type={recommendation.type} message={recommendation.message} isDarkMode={isDarkMode} />
@@ -88,7 +115,7 @@ export default function MovieCard({ movie, recommendation, score, isDarkMode }) 
         </div>
       </article>
 
-      {/* COMPONENTA DE MODAL (Doar dacă imaginea e validă) */}
+      {/* COMPONENTA DE MODAL (Apare doar dacă imaginea e validă și dăm click pe ea) */}
       {!isPosterMissing && (
         <PosterModal 
           isOpen={showPosterModal} 

@@ -1,10 +1,20 @@
 // Contribuție: Cosmin P. - Butoane de acțiune și funcția "Surprinde-mă"
 
+/**
+ * Componenta ActionButtons - Grupează butoanele principale de interacțiune.
+ * @param {Function} onSurpriseMe - O funcție (callback) primită de la SearchBar care alege un film la întâmplare.
+ */
 export default function ActionButtons({ onSurpriseMe, isDarkMode }) {
   return (
+    /**
+     * flex-col sm:flex-row: Pe ecrane mici (mobil) butoanele stau unul sub altul, 
+     * iar pe ecrane "sm" (small/tabletă) și mai mari, stau pe orizontală.
+     */
     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+      
+      {/* BUTONUL DE CĂUTARE */}
       <button 
-        type="submit" 
+        type="submit" // Acest tip spune browserului să declanșeze evenimentul onSubmit al formularului părinte.
         className={`
           px-10 py-4 font-black uppercase tracking-wide rounded-full transition-all duration-300 active:scale-95 w-full sm:w-auto
           ${isDarkMode 
@@ -16,9 +26,10 @@ export default function ActionButtons({ onSurpriseMe, isDarkMode }) {
         Caută Filmul
       </button>
       
+      {/* BUTONUL SURPRINDE-MĂ */}
       <button 
-        type="button" 
-        onClick={onSurpriseMe}
+        type="button" // Prevenim trimiterea formularului; acest buton are o funcție separată.
+        onClick={onSurpriseMe} // Legăm funcția primită prin props la evenimentul de click.
         className={`
           flex items-center justify-center gap-2 px-8 py-4 font-semibold uppercase tracking-tight rounded-full transition-all duration-300 active:scale-95 border-2 w-full sm:w-auto
           ${isDarkMode 
