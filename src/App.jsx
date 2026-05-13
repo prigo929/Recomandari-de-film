@@ -1,7 +1,7 @@
 // Contribuție: Alin P. - Setup arhitectură React și gestionare stare globală
 
 import { useState, useEffect } from "react";
-import { fetchMovieData } from "./api/omdb";
+import { fetchMovieData } from "./api/tmdb";
 import { getRottenTomatoesScore, getRecommendationMessage } from "./utils/scoreEvaluator";
 import { getMovieFromCache, saveMovieToCache } from "./utils/cacheManager";
 import SearchBar from "./components/search/SearchBar";

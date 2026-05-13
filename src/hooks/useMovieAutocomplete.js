@@ -1,6 +1,7 @@
 // Contribuție: Cosmin P. - Logică pentru autocompletare filme
 
 import { useState, useEffect, useRef } from 'react';
+import { fetchSuggestions } from '../api/tmdb';
 
 export function useMovieAutocomplete() {
   const [query, setQuery] = useState('');
@@ -50,14 +51,12 @@ export function useMovieAutocomplete() {
     
     const timeoutId = setTimeout(async () => {
       try {
-        const key = import.meta.env.VITE_OMDB_API_KEY;
-        const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&type=movie&apikey=${key}`);
-        const data = await res.json();
+        const results = await fetchSuggestions(query);
         
         if (!isActive) return;
 
-        if (data.Response === "True") {
-          setSuggestions(data.Search.slice(0, 5));
+        if (results.length > 0) {
+          setSuggestions(results);
           
           // Dacă NU suntem pe modul tăcut, arată dropdown-ul
           if (!silentFetch.current) {

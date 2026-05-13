@@ -1,12 +1,11 @@
 # Proiect 13: Recomandări de film (Web Development)
-
-Aplicație web modernă de tip Single Page Application (SPA), care utilizează OMDb API pentru a furniza date despre filme și o logică de decizie bazată pe scorurile de la Rotten Tomatoes.
+Aplicație web modernă de tip Single Page Application (SPA), care utilizează TMDb API pentru a furniza date despre filme și o logică de decizie bazată pe scorurile TMDb.
 
 ## ✨ Funcționalități Cheie
 
 *   **Căutare Avansată:** Sugestii în timp real (autocomplete) în timpul tastării.
 *   **Istoric Căutări:** Salvarea și afișarea ultimelor căutări pentru acces rapid.
-*   **Sistem de Recomandări:** Analiză automată a scorurilor Rotten Tomatoes cu feedback vizual (Banner de recomandare).
+*   **Sistem de Recomandări:** Analiză automată a scorurilor TMDb cu feedback vizual (Banner de recomandare).
 *   **UX Îmbunătățit:** Skeleton loading pentru a reduce timpul perceput de așteptare.
 *   **Caching Inteligent:** Stocare în `localStorage` cu timp de expirare pentru a optimiza apelurile API.
 *   **Vizualizare Imersivă:** Modal (pop-up) pentru mărirea posterelor și design responsiv adaptat pentru orice dispozitiv.
@@ -16,13 +15,13 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 *   **Frontend:** React 19, Tailwind CSS 4.
 *   **Build Tool:** Vite.
 *   **Testare:** Vitest (unit testing pentru logica de scor).
-*   **API:** OMDb API.
+*   **API:** TMDb API.
 
 ## Membrii Echipei și Contribuții
 
 *   **Alin P.** (Membrul 1)
     *   Setup arhitectură React (Vite).
-    *   Integrare API (`fetch` către OMDb) și data handling.
+    *   Integrare API (`fetch` către TMDb) și data handling.
     *   Implementare mecanism de Caching cu expirare (LocalStorage).
     *   Scriere logică decizională (Programare Funcțională) și teste unitare (Vitest).
 *   **Cosmin P.** (Membrul 2)
@@ -34,7 +33,9 @@ Aplicație web modernă de tip Single Page Application (SPA), care utilizează O
 ## 🚀 Rulare Proiect
 
 1. `npm install`
-2. Creați un fișier `.env` în rădăcină: `VITE_OMDB_API_KEY=cheia_voastra`
+2. Creați un fișier `.env` în rădăcină: 
+   `VITE_TMDB_API_KEY=cheia_voastra`
+   `VITE_TMDB_ACCESS_TOKEN=tokenul_vostru`
 3. `npm run dev`
 
 ## 🧪 Rulare Teste
@@ -81,7 +82,13 @@ Proiectul bifează următoarele puncte din baremul de evaluare:
 ## 🔮 Direcții de Viitor (Roadmap)
 
 Dacă am continua dezvoltarea proiectului, iată ce funcționalități am adăuga:
-*   **Watchlist:** Posibilitatea de a salva filmele favorite într-o listă personalizată.
+*   **Watchlist:** Posibilitatea de a salva filmele favorite într'o listă personalizată.
 *   **Trailer Integration:** Integrare cu YouTube API pentru a vedea trailerul filmului direct în aplicație.
+*   **Filtrare Avansată:** Căutare după gen, regizor sau interval de ani.
+*   **Autentificare:** Conturi de utilizator pentru a păstra istoricul pe mai multe dispozitive.
+
+### 📂 Structura Fișierelor (Unde găsesc X?)
+*   **src/api/** - Aici "vorbim" cu exteriorul. Conține funcțiile care cer date de la serverul TMDb.
+ru a vedea trailerul filmului direct în aplicație.
 *   **Filtrare Avansată:** Căutare după gen, regizor sau interval de ani.
 *   **Autentificare:** Conturi de utilizator pentru a păstra istoricul pe mai multe dispozitive.
