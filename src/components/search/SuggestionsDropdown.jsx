@@ -37,7 +37,7 @@ export default function SuggestionsDropdown({ suggestions, onSuggestionClick, is
             
             {isPosterMissing ? (
               // Iconiță de rezervă dacă posterul lipsește.
-              <div className={`w-10 h-14 flex-shrink-0 flex items-center justify-center rounded shadow-sm border border-slate-500/30 text-lg ${isDarkMode ? 'bg-slate-900/50' : 'bg-slate-200/50'}`} title="Poster indisponibil">
+              <div className={`w-10 h-14 shrink-0 flex items-center justify-center rounded shadow-sm border border-slate-500/30 text-lg ${isDarkMode ? 'bg-slate-900/50' : 'bg-slate-200/50'}`} title="Poster indisponibil">
                 🎬
               </div>
             ) : (
@@ -45,7 +45,7 @@ export default function SuggestionsDropdown({ suggestions, onSuggestionClick, is
               <img 
                 src={m.Poster} 
                 onError={() => setFailedImages(prev => ({ ...prev, [m.imdbID]: true }))}
-                className="w-10 h-14 object-cover rounded shadow-sm border border-slate-500/30 flex-shrink-0" 
+                className="w-10 h-14 object-cover rounded shadow-sm border border-slate-500/30 shrink-0" 
                 alt="Poster" 
               />
             )}

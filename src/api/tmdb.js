@@ -5,19 +5,40 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 /**
+ * Funcție helper pentru a extrage certificarea (Rating-ul) dintr-o listă complexă de rezultate TMDb.
+ */
+const getCertification = (releaseResults) => {
+  if (!releaseResults) return "N/A";
+  
+  // Încercăm să găsim rating-ul din SUA (cel mai comun standard: R, PG-13, etc.)
+  const usRelease = releaseResults.find(r => r.iso_3166_1 === 'US');
+  if (usRelease) {
+    const cert = usRelease.release_dates.find(d => d.certification !== "")?.certification;
+    if (cert) return cert;
+  }
+  
+  // Dacă nu găsim SUA, căutăm orice altă certificare disponibilă
+  for (const r of releaseResults) {
+    const cert = r.release_dates.find(d => d.certification !== "")?.certification;
+    if (cert) return cert;
+  }
+  
+  return "N/A";
+};
+
+/**
  * Normalizăm datele de la TMDb pentru a fi compatibile cu structura existentă a aplicației (OMDb style).
  */
 const normalizeMovieData = (tmdbData) => {
   return {
     Title: tmdbData.title,
     Year: tmdbData.release_date ? tmdbData.release_date.substring(0, 4) : "N/A",
-    Rated: tmdbData.release_dates?.results?.find(r => r.iso_3166_1 === 'US')?.release_dates?.[0]?.certification || "N/A",
+    Rated: getCertification(tmdbData.release_dates?.results),
     Runtime: tmdbData.runtime ? `${tmdbData.runtime} min` : "N/A",
     Genre: tmdbData.genres ? tmdbData.genres.map(g => g.name).join(", ") : "N/A",
-    Plot: tmdbData.overview,
+    Plot: tmdbData.overview || "Sinopsisul nu este disponibil pentru acest film.",
     Poster: tmdbData.poster_path ? `${IMAGE_BASE_URL}${tmdbData.poster_path}` : "N/A",
     imdbID: tmdbData.imdb_id || tmdbData.id,
-    // Simulăm structura de Ratings pentru a păstra compatibilitatea cu scoreEvaluator.js
     Ratings: [
       { 
         Source: "Rotten Tomatoes", 
@@ -30,7 +51,6 @@ const normalizeMovieData = (tmdbData) => {
 
 export const fetchMovieData = async (title) => {
   try {
-    // Pas 1: Căutăm filmul pentru a obține ID-ul
     const searchRes = await fetch(
       `${BASE_URL}/search/movie?query=${encodeURIComponent(title)}&include_adult=false&language=ro-RO&page=1`,
       {
@@ -48,7 +68,7 @@ export const fetchMovieData = async (title) => {
 
     const movieId = searchData.results[0].id;
 
-    // Pas 2: Preluăm detaliile complete (runtime, genres, certifications)
+    // Pas 2: Preluăm detaliile complete
     const detailsRes = await fetch(
       `${BASE_URL}/movie/${movieId}?append_to_response=release_dates&language=ro-RO`,
       {
@@ -58,7 +78,22 @@ export const fetchMovieData = async (title) => {
         }
       }
     );
-    const detailsData = await detailsRes.json();
+    let detailsData = await detailsRes.json();
+
+    // FALLBACK: Dacă nu există sinopsis în Română, îl descărcăm pe cel în Engleză
+    if (!detailsData.overview || detailsData.overview.trim() === "") {
+      const enRes = await fetch(
+        `${BASE_URL}/movie/${movieId}?language=en-US`,
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_TOKEN}`,
+            accept: 'application/json'
+          }
+        }
+      );
+      const enData = await enRes.json();
+      detailsData.overview = enData.overview;
+    }
 
     return normalizeMovieData(detailsData);
   } catch (error) {
@@ -67,9 +102,6 @@ export const fetchMovieData = async (title) => {
   }
 };
 
-/**
- * Funcție pentru sugestii de autocompletare
- */
 export const fetchSuggestions = async (query) => {
   try {
     const res = await fetch(
@@ -83,7 +115,6 @@ export const fetchSuggestions = async (query) => {
     );
     const data = await res.json();
     
-    // Normalizăm sugestiile pentru a fi compatibile cu UI-ul existent
     return (data.results || []).slice(0, 5).map(m => ({
       Title: m.title,
       Year: m.release_date ? m.release_date.substring(0, 4) : "N/A",
